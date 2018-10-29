@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.MenuItem
+import android.widget.FrameLayout
 import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
@@ -23,6 +24,29 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         nv = findViewById(R.id.nv)
         setListeners()
+
+        //Fragments?
+        if (findViewById<FrameLayout>(R.id.fragment_container) != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return
+            }
+
+            // Create a new Fragment to be placed in the activity layout
+            val firstFragment = ProjectManagerFragment()
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            firstFragment.arguments = intent.extras
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            supportFragmentManager.beginTransaction().apply {
+                add(R.id.fragment_container, firstFragment)
+            }.commit()
+        }
     }
 
     private fun setListeners(){
