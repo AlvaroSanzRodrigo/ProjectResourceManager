@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         dl = findViewById(R.id.activity_main)
         t = ActionBarDrawerToggle(this, dl, R.string.Open, R.string.Close)
         dl.addDrawerListener(t)
