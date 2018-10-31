@@ -29,7 +29,7 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
                                         viewType: Int): AdapterDocument.MyViewHolder {
             // create a new view
             val layoutInflater = LayoutInflater.from(parent.context)
-            val view = layoutInflater.inflate(R.layout.recycler_view_item, parent, false) as View
+            val view = layoutInflater.inflate(R.layout.document_list_model, parent, false) as View
             // set the view's size, margins, paddings and layout parameters
             return MyViewHolder(view)
         }
@@ -38,9 +38,12 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            holder.view.findViewById<TextView>(R.id.textView).text = items[position].type
+
+            holder.view.findViewById<TextView>(R.id.document_list_model_type).text = items[position].type
+            holder.view.findViewById<ImageView>(R.id.document_list_model_image).setImageDrawable(items[position].image)
+            holder.view.findViewById<TextView>(R.id.document_list_model_date).text = items[position].date.toString()
         }
 
         // Return the size of your dataset (invoked by the layout manager)
-        override fun getItemCount() = 4
+        override fun getItemCount() = items.size
     }
