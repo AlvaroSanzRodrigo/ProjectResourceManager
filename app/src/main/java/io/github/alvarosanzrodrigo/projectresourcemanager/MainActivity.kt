@@ -3,6 +3,8 @@ package io.github.alvarosanzrodrigo.projectresourcemanager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.design.widget.TabLayout
+import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.MenuItem
@@ -13,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dl: DrawerLayout
     private lateinit var t: ActionBarDrawerToggle
     private lateinit var nv: NavigationView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +30,8 @@ class MainActivity : AppCompatActivity() {
         nv = findViewById(R.id.nv)
         setListeners()
 
-        //Fragments?
+
+
         if (findViewById<FrameLayout>(R.id.fragment_container) != null) {
 
             // However, if we're being restored from a previous state,

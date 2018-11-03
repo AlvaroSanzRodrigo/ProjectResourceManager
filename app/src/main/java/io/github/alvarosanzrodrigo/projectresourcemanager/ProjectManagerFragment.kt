@@ -1,71 +1,59 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager
 
-import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
+import android.support.v4.app.FragmentManager
+import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.github.alvarosanzrodrigo.projectresourcemanager.Models.Document
-import java.util.*
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import kotlin.collections.ArrayList
-import android.support.v7.widget.DividerItemDecoration
-
-
 
 
 class ProjectManagerFragment : Fragment() {
-    private var items: ArrayList<Document> = ArrayList()
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        context?.let {
-            loadItems(it)
-        }
+
+
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager: ViewPager
+    private lateinit var adapter: PagerAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val rootView :View = inflater.inflate(R.layout.fragment_project_manager, container, false)
-        viewManager = LinearLayoutManager(activity)
-        viewAdapter = AdapterDocument(items)
-        recyclerView = rootView.findViewById<RecyclerView>(R.id.rv_documents).apply {
-            setHasFixedSize(true)
-            layoutManager = viewManager
-            adapter = viewAdapter
+        return inflater.inflate(R.layout.principal_fragment_project_manager, container, false).apply {
+            tabLayout = this.findViewById(R.id.tabLayout)
+            tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+            viewPager = this.findViewById(R.id.pager)
+            adapter = fragmentManager?.let { PagerAdapter(it, tabLayout.tabCount) }!!
+            viewPager.adapter = adapter
+            viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+            tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))
         }
-        return rootView
-    }
 
-    private fun loadItems(context: Context){
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_image)!!, Date(), "IreneLaChupa"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_audio)!!, Date(), "Audio"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_video)!!, Date(), "Video"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_text)!!, Date(), "Text"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_image)!!, Date(), "IreneLaChupa"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_audio)!!, Date(), "Audio"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_video)!!, Date(), "Video"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_text)!!, Date(), "Text"))
-
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_image)!!, Date(), "IreneLaChupa"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_audio)!!, Date(), "Audio"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_video)!!, Date(), "Video"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_text)!!, Date(), "Text"))
-
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_image)!!, Date(), "IreneLaChupa"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_audio)!!, Date(), "Audio"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_video)!!, Date(), "Video"))
-        items.add(Document(ContextCompat.getDrawable(context, R.drawable.ic_text)!!, Date(), "Text"))
-
+        //Fragments?
 
     }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    fun onButtonPressed(uri: Uri) {
+
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+
+    }
+
 
 }

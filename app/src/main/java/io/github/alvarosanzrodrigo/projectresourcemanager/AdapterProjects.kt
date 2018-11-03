@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import io.github.alvarosanzrodrigo.projectresourcemanager.Models.Document
 
-class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<AdapterDocument.MyViewHolder>() {
+    class AdapterProjects(var items: ArrayList<Document>) : RecyclerView.Adapter<AdapterProjects.MyViewHolder>() {
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -19,10 +19,10 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
 
         // Create new views (invoked by the layout manager)
         override fun onCreateViewHolder(parent: ViewGroup,
-                                        viewType: Int): AdapterDocument.MyViewHolder {
+                                        viewType: Int): AdapterProjects.MyViewHolder {
             // create a new view
             val layoutInflater = LayoutInflater.from(parent.context)
-            val view = layoutInflater.inflate(R.layout.document_list_model, parent, false) as View
+            val view = layoutInflater.inflate(R.layout.project_list_model, parent, false) as View
             // set the view's size, margins, paddings and layout parameters
             return MyViewHolder(view)
         }
@@ -40,3 +40,4 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
         // Return the size of your dataset (invoked by the layout manager)
         override fun getItemCount() = items.size
     }
+}

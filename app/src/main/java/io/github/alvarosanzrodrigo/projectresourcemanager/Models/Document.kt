@@ -8,4 +8,5 @@ class Document(
     var image: Drawable,
     var date: Date,
     var type: String
+
 )
