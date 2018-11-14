@@ -1,25 +1,28 @@
-package io.github.alvarosanzrodrigo.projectresourcemanager
+package io.github.alvarosanzrodrigo.projectresourcemanager.Adapters
 
-import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.CategoriesFragment
+import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.ProjectDocumentsManagerFragment
 
 class PagerAdapter (fm: FragmentManager, internal var mNumOfTabs: Int) : FragmentStatePagerAdapter(fm) {
 
 
 
     override fun getItem(position: Int): Fragment? {
-        val tabFragment: Fragment= ProjectDocumentsManagerFragment()
+        val documentsFragment: Fragment=
+            ProjectDocumentsManagerFragment()
+        val categoriesFragment: Fragment = CategoriesFragment()
         return when (position) {
             0 -> {
-                tabFragment
+                documentsFragment
             }
             1 -> {
-                tabFragment
+                categoriesFragment
             }
             2 -> {
-                tabFragment
+                categoriesFragment
             }
             else -> null
         }

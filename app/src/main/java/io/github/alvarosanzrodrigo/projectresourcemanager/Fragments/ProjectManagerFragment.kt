@@ -1,15 +1,16 @@
-package io.github.alvarosanzrodrigo.projectresourcemanager
+package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
 
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.github.alvarosanzrodrigo.projectresourcemanager.Adapters.PagerAdapter
+import io.github.alvarosanzrodrigo.projectresourcemanager.R
 
 
 class ProjectManagerFragment : Fragment() {
@@ -30,7 +31,12 @@ class ProjectManagerFragment : Fragment() {
             tabLayout = this.findViewById(R.id.tabLayout)
             tabLayout.tabGravity = TabLayout.GRAVITY_FILL
             viewPager = this.findViewById(R.id.pager)
-            adapter = fragmentManager?.let { PagerAdapter(it, tabLayout.tabCount) }!!
+            adapter = fragmentManager?.let {
+                PagerAdapter(
+                    it,
+                    tabLayout.tabCount
+                )
+            }!!
             viewPager.adapter = adapter
             viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
             tabLayout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(viewPager))

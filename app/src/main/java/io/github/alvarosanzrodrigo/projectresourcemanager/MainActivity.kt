@@ -1,17 +1,23 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.Toast
+import io.github.alvarosanzrodrigo.projectresourcemanager.Adapters.AdapterProjects
+import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.ProjectListFragment
+import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.ProjectManagerFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
+    override fun onItemSelected(int: Int) {
+        System.err.println("This come from the MainActivity")
+        changeFragment()
+    }
+
     private lateinit var dl: DrawerLayout
     private lateinit var t: ActionBarDrawerToggle
     private lateinit var nv: NavigationView
@@ -20,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
         dl = findViewById(R.id.activity_main)
         t = ActionBarDrawerToggle(this, dl, R.string.Open, R.string.Close)
@@ -42,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Create a new Fragment to be placed in the activity layout
-            val firstFragment = ProjectManagerFragment()
+            val firstFragment = ProjectListFragment()
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
@@ -53,6 +58,15 @@ class MainActivity : AppCompatActivity() {
                 add(R.id.fragment_container, firstFragment)
             }.commit()
         }
+    }
+
+    fun changeFragment(){
+        val fragment = ProjectManagerFragment()
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_container, fragment)
+            addToBackStack(null)
+
+        }.commit()
     }
 
     private fun setListeners(){
