@@ -10,20 +10,7 @@ import android.view.ViewGroup
 
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [CategoriesFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [CategoriesFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class CategoriesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

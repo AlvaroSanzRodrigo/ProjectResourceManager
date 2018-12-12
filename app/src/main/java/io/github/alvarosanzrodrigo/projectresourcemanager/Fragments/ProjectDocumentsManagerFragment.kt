@@ -44,7 +44,7 @@ class ProjectDocumentsManagerFragment : Fragment() {
     private fun loadItems(context: Context) {
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_image
-        )!!, Date(), "IreneLaChupa"))
+        )!!, Date(), "Imagen"))
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_audio
         )!!, Date(), "Audio"))
@@ -56,20 +56,7 @@ class ProjectDocumentsManagerFragment : Fragment() {
         )!!, Date(), "Text"))
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_image
-        )!!, Date(), "IreneLaChupa"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_audio
-        )!!, Date(), "Audio"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_video
-        )!!, Date(), "Video"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_text
-        )!!, Date(), "Text"))
-
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_image
-        )!!, Date(), "IreneLaChupa"))
+        )!!, Date(), "Imagen"))
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_audio
         )!!, Date(), "Audio"))
@@ -82,7 +69,20 @@ class ProjectDocumentsManagerFragment : Fragment() {
 
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_image
-        )!!, Date(), "IreneLaChupa"))
+        )!!, Date(), "Imagen"))
+        items.add(Document(ContextCompat.getDrawable(context,
+            R.drawable.ic_audio
+        )!!, Date(), "Audio"))
+        items.add(Document(ContextCompat.getDrawable(context,
+            R.drawable.ic_video
+        )!!, Date(), "Video"))
+        items.add(Document(ContextCompat.getDrawable(context,
+            R.drawable.ic_text
+        )!!, Date(), "Text"))
+
+        items.add(Document(ContextCompat.getDrawable(context,
+            R.drawable.ic_image
+        )!!, Date(), "Imagen"))
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_audio
         )!!, Date(), "Audio"))
