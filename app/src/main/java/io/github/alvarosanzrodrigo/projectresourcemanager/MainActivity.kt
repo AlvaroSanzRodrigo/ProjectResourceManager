@@ -1,7 +1,11 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -9,10 +13,13 @@ import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.Toast
 import io.github.alvarosanzrodrigo.projectresourcemanager.Adapters.AdapterProjects
+import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.ProjectDocumentsManagerFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.ProjectListFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.ProjectManagerFragment
 
 class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
+
+
     override fun onItemSelected(int: Int) {
         System.err.println("This come from the MainActivity")
         changeFragment()
@@ -34,6 +41,14 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         nv = findViewById(R.id.nv)
         setListeners()
+        if (ContextCompat.checkSelfPermission(this.applicationContext,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                , 1)
+        }
 
 
 

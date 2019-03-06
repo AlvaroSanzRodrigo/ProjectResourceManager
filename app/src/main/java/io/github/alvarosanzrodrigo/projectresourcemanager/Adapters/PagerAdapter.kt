@@ -13,6 +13,8 @@ class PagerAdapter (fm: FragmentManager, internal var mNumOfTabs: Int) : Fragmen
     override fun getItem(position: Int): Fragment? {
         val documentsFragment: Fragment=
             ProjectDocumentsManagerFragment()
+
+
         val categoriesFragment: Fragment = CategoriesFragment()
         return when (position) {
             0 -> {
