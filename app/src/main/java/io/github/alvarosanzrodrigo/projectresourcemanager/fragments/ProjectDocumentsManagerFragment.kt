@@ -1,6 +1,5 @@
-package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
+package io.github.alvarosanzrodrigo.projectresourcemanager.fragments
 
-import android.Manifest
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -13,8 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
-import io.github.alvarosanzrodrigo.projectresourcemanager.Adapters.AdapterDocument
-import io.github.alvarosanzrodrigo.projectresourcemanager.Models.Document
+import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
+import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import java.util.*
 import kotlin.collections.ArrayList
@@ -23,13 +22,9 @@ import android.support.v4.content.FileProvider
 import android.widget.Toast
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Picture
-import android.os.Environment
 import java.io.File
 import java.io.IOException
-import android.os.Environment.DIRECTORY_PICTURES
 import android.os.Environment.getExternalStorageDirectory
-import android.support.v4.app.ActivityCompat
 import java.text.SimpleDateFormat
 
 
@@ -52,7 +47,7 @@ class ProjectDocumentsManagerFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         context?.let {
-            loadItems(it)
+            //loadItems(it)
         }
     }
 
@@ -162,7 +157,8 @@ class ProjectDocumentsManagerFragment : Fragment() {
         }
         return rootView
     }
-    private fun loadItems(context: Context) {
+
+    /*private fun loadItems(context: Context) {
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_image
         )!!, Date(), "Imagen"))
@@ -213,5 +209,5 @@ class ProjectDocumentsManagerFragment : Fragment() {
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_text
         )!!, Date(), "Text"))
-    }
+    }*/
 }

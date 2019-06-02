@@ -1,4 +1,4 @@
-package io.github.alvarosanzrodrigo.projectresourcemanager.Adapters
+package io.github.alvarosanzrodrigo.projectresourcemanager.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import io.github.alvarosanzrodrigo.projectresourcemanager.Models.Document
+import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 
 class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<AdapterDocument.MyViewHolder>() {
@@ -34,7 +34,6 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
             // - replace the contents of the view with that element
 
             holder.view.findViewById<TextView>(R.id.document_list_model_type).text = items[position].type
-            holder.view.findViewById<ImageView>(R.id.document_list_model_image).setImageDrawable(items[position].image)
             holder.view.findViewById<TextView>(R.id.document_list_model_date).text = items[position].date.toString()
         }
 

@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -13,6 +15,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {
@@ -34,4 +41,20 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.github.fafaldo:fab-toolbar:1.2.0'
+
+    //Room Database
+    def room_version = "1.1.1"
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
+
+    ///Anko
+    def anko_version = "0.10.8"
+    implementation "org.jetbrains.anko:anko-common:$anko_version"
+
+    //moshiJSON parser
+    def moshi_version = "1.6.0"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+
 }

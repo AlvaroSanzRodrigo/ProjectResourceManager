@@ -1,4 +1,4 @@
-package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
+package io.github.alvarosanzrodrigo.projectresourcemanager.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.github.alvarosanzrodrigo.projectresourcemanager.Adapters.AdapterProjects
-import io.github.alvarosanzrodrigo.projectresourcemanager.Models.Project
+import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterProjects
+import io.github.alvarosanzrodrigo.projectresourcemanager.models.Project
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import java.util.*
 
@@ -38,26 +38,10 @@ class ProjectListFragment : Fragment() {
     }
 
     private fun loadItems(){
-        context?.let { it ->
-            ContextCompat.getDrawable(it, R.drawable.ic_folder)?.let { Project("Projecto Alfa", Date(), it) }?.let {
-                items.add(
-                    it
-                )
-            }
-        }
-        context?.let { it ->
-            ContextCompat.getDrawable(it, R.drawable.ic_folder)?.let { Project("Projecto Beta", Date(), it) }?.let {
-                items.add(
-                    it
-                )
-            }
-        }
-        context?.let { it ->
-            ContextCompat.getDrawable(it, R.drawable.ic_folder)?.let { Project("Projecto Gamma", Date(), it) }?.let {
-                items.add(
-                    it
-                )
-            }
+        Project("Projecto Alfa", Date()).let {
+            items.add(
+                it
+            )
         }
     }
 }

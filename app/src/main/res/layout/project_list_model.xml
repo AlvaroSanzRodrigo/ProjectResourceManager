@@ -22,8 +22,10 @@
                     android:id="@+id/project_list_model_img"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    tools:src="@drawable/ic_folder"
-                    />
+
+
+                    tools:srcCompat="@drawable/ic_folder" app:srcCompat="@drawable/ic_folder"
+                    android:contentDescription="folder"/>
 
             <LinearLayout
                     android:padding="24dp"
