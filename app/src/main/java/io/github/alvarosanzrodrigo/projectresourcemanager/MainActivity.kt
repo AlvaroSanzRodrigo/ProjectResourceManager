@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterProjects
 import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.ProjectDaoRepository
+import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.NewProjectDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.ProjectListFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.ProjectManagerFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Project
@@ -102,9 +103,9 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
                 }
                 R.id.new_proyect -> {
                     Toast.makeText(this@MainActivity, "New Project", Toast.LENGTH_SHORT).show()
-                    val projects = listOf(Project("Titulo", date = java.util.Date()))
-                    ProjectDaoRepository.getInstance(application).insertAll(projects)
-                    System.err.println(ProjectDaoRepository.getInstance(application).getAll())
+                    val newFragment = NewProjectDialogFragment()
+                    newFragment.show(supportFragmentManager, "Cart")
+
                     dl.closeDrawers()
                     true
                 }
