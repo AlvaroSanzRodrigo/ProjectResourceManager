@@ -1,4 +1,4 @@
-package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
+package io.github.alvarosanzrodrigo.projectresourcemanager.fragments
 
 import android.content.Context
 import android.net.Uri
@@ -9,7 +9,7 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.github.alvarosanzrodrigo.projectresourcemanager.Adapters.PagerAdapter
+import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.PagerAdapter
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 
 

@@ -1,20 +1,12 @@
-package io.github.alvarosanzrodrigo.projectresourcemanager.Adapters
+package io.github.alvarosanzrodrigo.projectresourcemanager.adapters
 
-import android.app.Application
-import android.content.Context
-import android.support.design.resources.MaterialResources.getDrawable
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import io.github.alvarosanzrodrigo.projectresourcemanager.MainActivity
-import io.github.alvarosanzrodrigo.projectresourcemanager.Models.Document
-import io.github.alvarosanzrodrigo.projectresourcemanager.Models.Project
+import io.github.alvarosanzrodrigo.projectresourcemanager.models.Project
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 
 
@@ -30,6 +22,7 @@ class AdapterProjects(var items: ArrayList<Project>) : RecyclerView.Adapter<Adap
     // Each data item is just a string in this case that is shown in a TextView.
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
     var mCallBack: OnClickedItemListener? = null
+
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(
@@ -61,10 +54,10 @@ class AdapterProjects(var items: ArrayList<Project>) : RecyclerView.Adapter<Adap
             System.err.println("Clicked $position")
             mCallBack?.onItemSelected(position)
         }
-        holder.view.findViewById<ImageView>(R.id.project_list_model_img).setImageDrawable(items[position].drawable)
         holder.view.findViewById<TextView>(R.id.project_list_model_title).text = items[position].title
         holder.view.findViewById<TextView>(R.id.project_list_model_date).text = items[position].date.toString()
     }
+
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = items.size
