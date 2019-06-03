@@ -23,6 +23,7 @@ class AdapterProjects(var items: ArrayList<Project>) : RecyclerView.Adapter<Adap
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
     var mCallBack: OnClickedItemListener? = null
 
+
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -56,6 +57,7 @@ class AdapterProjects(var items: ArrayList<Project>) : RecyclerView.Adapter<Adap
         holder.view.findViewById<TextView>(R.id.project_list_model_title).text = items[position].title
         holder.view.findViewById<TextView>(R.id.project_list_model_date).text = items[position].date.toString()
     }
+
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = items.size
