@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.ProjectDocumentsManagerFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CategoriesFragment
-import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.ProjectDocumentsManagerFragment
 
 class PagerAdapter (fm: FragmentManager, internal var mNumOfTabs: Int, internal var projectId: Int, internal var projectName: String) : FragmentStatePagerAdapter(fm) {
 

@@ -1,6 +1,6 @@
-package io.github.alvarosanzrodrigo.projectresourcemanager.fragments
+package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
 
-import android.annotation.SuppressLint
+import android.Manifest
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -13,8 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
-import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
-import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
+
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import java.util.*
 import kotlin.collections.ArrayList
@@ -23,11 +22,15 @@ import android.support.v4.content.FileProvider
 import android.widget.Toast
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
+import android.graphics.Picture
 import android.os.Environment
 import java.io.File
 import java.io.IOException
+import android.os.Environment.DIRECTORY_PICTURES
 import android.os.Environment.getExternalStorageDirectory
+import android.support.v4.app.ActivityCompat
+import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
+import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
 import java.text.SimpleDateFormat
 
 
@@ -44,8 +47,7 @@ class ProjectDocumentsManagerFragment : Fragment() {
     private lateinit var toolbarImageViewPhoto: ImageView
     private lateinit var pictureFilePath: String
 
-    private var projectId: Int = 0
-    private var projectName: String = ""
+
 
 
     override fun onAttach(context: Context?) {
@@ -55,70 +57,72 @@ class ProjectDocumentsManagerFragment : Fragment() {
         }
     }
 
-    var currentPhotoPath: String = ""
-
-    @SuppressLint("SimpleDateFormat")
     @Throws(IOException::class)
-    private fun createImageFile(): File {
-        println("AL MENOS PASA PRO EL PRICIPIO DE CREATE IMAGE FILE")
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val projectDirectoryPath = "$projectName/pics/"
-        val storageDir: File = File(projectDirectoryPath)
-        storageDir.mkdirs()
-        return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        ).apply {
-            println("?????")
-            // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
-        }
+    private fun getPictureFile(): File {
+        val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+        val pictureFile = "projectResourceManager_$timeStamp"
+
+        val storageDir = getExternalStorageDirectory()
+        val image = File.createTempFile(pictureFile, ".jpg", storageDir)
+        pictureFilePath = image.absolutePath
+        return image
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-    }
+    private fun sendTakePictureIntent() {
 
-    private fun dispatchTakePictureIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            activity?.packageManager.let { packageManager ->
-                takePictureIntent.resolveActivity(packageManager)?.also {
-                    // Create the File where the photo should go
-                    val photoFile: File? = try {
-                        println("MAS O MENOSSS")
-                        createImageFile()
-                    } catch (ex: IOException) {
-                        // Error occurred while creating the File
-                        println("MAAAAL")
-                        null
-                    }
-                    // Continue only if the File was successfully created
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
+        if (cameraIntent.resolveActivity(context!!.packageManager) != null) {
+            startActivityForResult(cameraIntent, 1)
 
-                    photoFile?.also { file ->
-                        println("NO LO ENTIENDO")
-                        val photoURI: Uri = activity?.let { activity ->
-                            FileProvider.getUriForFile(
-                                activity,
-                                "io.github.alvarosanzrodrigo.projectresourcemanager",
-                                file
-                            )
-                        }!!
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    }
-                    startActivityForResult(takePictureIntent, 100)
+            var pictureFile: File?
+            try {
+                pictureFile = getPictureFile()
+            } catch (ex: IOException) {
+                ex.printStackTrace()
+                Toast.makeText(
+                    context,
+                    "Photo file can't be created, please try again",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
 
-                }
+            if (pictureFile != null) {
+                val photoURI = FileProvider.getUriForFile(
+                    parentFragment!!.context!!,
+                    "io.github.alvarosanzrodrigo.projectresourcemanager",
+                    pictureFile
+                )
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(cameraIntent, 1)
             }
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
+        when (requestCode) {
+            1 -> {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    sendTakePictureIntent()
+                } else {
+                    Toast.makeText(context, "Necesitamos tus permisos para poder guardar tus fotos!", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+        }// other 'case' lines to check for other
+        // permissions this app might request
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        projectId = arguments?.get("projectId") as Int
-        projectName = arguments?.get("projectName") as String
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_project_manager, container, false)
         morph = rootView.findViewById(R.id.fabtoolbar)
@@ -135,7 +139,8 @@ class ProjectDocumentsManagerFragment : Fragment() {
         }
         toolbarImageViewPhoto = rootView.findViewById<ImageView>(R.id.toolbar_image).apply{
             this.setOnClickListener {
-                dispatchTakePictureIntent()
+
+                sendTakePictureIntent()
                 morph.hide()
             }
         }
@@ -150,8 +155,6 @@ class ProjectDocumentsManagerFragment : Fragment() {
             }
         }
         viewManager = LinearLayoutManager(activity)
-
-        //here is where I need to do all the LiveData things, one retrieved the project and the project name
         viewAdapter = AdapterDocument(items)
         recyclerView = rootView.findViewById<RecyclerView>(R.id.rv_documents).apply {
             setHasFixedSize(true)
@@ -161,7 +164,8 @@ class ProjectDocumentsManagerFragment : Fragment() {
         return rootView
     }
 
-    /*private fun loadItems(context: Context) {
+    /*
+    private fun loadItems(context: Context) {
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_image
         )!!, Date(), "Imagen"))
@@ -212,5 +216,6 @@ class ProjectDocumentsManagerFragment : Fragment() {
         items.add(Document(ContextCompat.getDrawable(context,
             R.drawable.ic_text
         )!!, Date(), "Text"))
-    }*/
+    }
+    */
 }
