@@ -1,8 +1,7 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager.models
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
+import io.github.alvarosanzrodrigo.projectresourcemanager.database.ListConverter
 import java.util.*
 
 @Entity(
@@ -12,9 +11,16 @@ import java.util.*
     childColumns = arrayOf("projectId")
 )]
 )
-class Document(
+data class Document(
     var projectId: Int,
     //var image: Drawable,
+    var path: String,
+    /*
+    @Ignore
+    @TypeConverters(ListConverter::class)
+    var tags:List<String>,
+    */
+    var description: String,
     var date: Date,
     var type: String
 ){

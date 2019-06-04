@@ -34,7 +34,9 @@ class ProjectManagerFragment : Fragment() {
             adapter = fragmentManager?.let {
                 PagerAdapter(
                     it,
-                    tabLayout.tabCount
+                    tabLayout.tabCount,
+                    arguments?.get("projectId") as Int,
+                    arguments?.get("projectName") as String
                 )
             }!!
             viewPager.adapter = adapter

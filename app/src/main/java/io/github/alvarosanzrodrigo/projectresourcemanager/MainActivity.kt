@@ -22,9 +22,9 @@ import io.github.alvarosanzrodrigo.projectresourcemanager.models.Project
 class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
 
 
-    override fun onItemSelected(int: Int) {
-        System.err.println("This come from the MainActivity")
-        changeFragment()
+    override fun onItemSelected(projectId: Int, projectName: String) {
+        System.err.println("projectId: $projectId ; ProjectName: $projectName")
+        changeFragment(projectId, projectName)
     }
 
     private lateinit var dl: DrawerLayout
@@ -78,8 +78,12 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
         }
     }
 
-    fun changeFragment(){
+    fun changeFragment(projectId: Int, projectName: String){
+        val bundle = Bundle()
+        bundle.putString("projectName", projectName)
+        bundle.putInt("projectId", projectId)
         val fragment = ProjectManagerFragment()
+        fragment.arguments = bundle
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.fragment_container, fragment)
             addToBackStack(null)
