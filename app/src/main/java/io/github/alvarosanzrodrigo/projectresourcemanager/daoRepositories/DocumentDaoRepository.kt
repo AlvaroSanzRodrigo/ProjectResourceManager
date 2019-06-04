@@ -34,6 +34,10 @@ class DocumentDaoRepository internal constructor(application: Application) {
         return mDocument
     }
 
+    fun getByProjectId(projectId : Int): LiveData<List<Document>> {
+        return mDocumentsDao.getByProjectId(projectId)
+    }
+
     fun insertAll(documents: List<Document>) {
 
         doAsync {

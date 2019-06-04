@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Project
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
@@ -40,7 +39,7 @@ class AdapterProjects(var items: ArrayList<Project>) : RecyclerView.Adapter<Adap
     }
 
     interface OnClickedItemListener {
-        fun onItemSelected(int: Int)
+        fun onItemSelected(projectId: Int, projectName: String)
     }
 
 
@@ -51,8 +50,7 @@ class AdapterProjects(var items: ArrayList<Project>) : RecyclerView.Adapter<Adap
         // - replace the contents of the view with that element
 
         holder.itemView.setOnClickListener {
-            System.err.println("Clicked $position")
-            mCallBack?.onItemSelected(position)
+            items[position].id?.let { mCallBack?.onItemSelected(projectId = it, projectName = items[position].title) }
         }
         holder.view.findViewById<TextView>(R.id.project_list_model_title).text = items[position].title
         holder.view.findViewById<TextView>(R.id.project_list_model_date).text = items[position].date.toString()
