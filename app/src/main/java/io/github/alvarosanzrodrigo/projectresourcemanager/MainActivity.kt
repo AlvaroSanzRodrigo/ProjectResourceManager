@@ -1,11 +1,8 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -13,13 +10,12 @@ import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.Toast
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterProjects
-import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.ProjectDaoRepository
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.NewProjectDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.ProjectListFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.ProjectManagerFragment
-import io.github.alvarosanzrodrigo.projectresourcemanager.models.Project
+import io.github.alvarosanzrodrigo.projectresourcemanager.utils.ManagePermissions
 
-class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
+class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener {
 
 
     override fun onItemSelected(projectId: Int, projectName: String) {
@@ -30,7 +26,29 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
     private lateinit var dl: DrawerLayout
     private lateinit var t: ActionBarDrawerToggle
     private lateinit var nv: NavigationView
+    private lateinit var managePermissions: ManagePermissions
 
+
+    // Receive the permissions request result
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            PERMISSIONS_REQUEST_CODE -> {
+                val isPermissionsGranted = managePermissions
+                    .processPermissionsResult(requestCode, permissions, grantResults)
+
+                if (isPermissionsGranted) {
+                    // Do the task now
+                    Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Permissions denied", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +62,19 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         nv = findViewById(R.id.nv)
         setListeners()
+
+        //list of all the permissions needed for the application:
+        val permissionsList = listOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+
+        managePermissions = ManagePermissions(this,permissionsList, PERMISSIONS_REQUEST_CODE)
+        managePermissions.checkPermissions()
+
+
+        /*
         if (ContextCompat.checkSelfPermission(this.applicationContext,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
@@ -52,7 +83,7 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 , 1)
         }
-
+        */
 
 
         if (findViewById<FrameLayout>(R.id.fragment_container) != null) {
@@ -78,7 +109,7 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
         }
     }
 
-    fun changeFragment(projectId: Int, projectName: String){
+    fun changeFragment(projectId: Int, projectName: String) {
         val bundle = Bundle()
         bundle.putString("projectName", projectName)
         bundle.putInt("projectId", projectId)
@@ -91,7 +122,7 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
         }.commit()
     }
 
-    private fun setListeners(){
+    private fun setListeners() {
         nv.setNavigationItemSelectedListener { item ->
             val id = item.itemId
             when (id) {
@@ -125,6 +156,10 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener{
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (t.onOptionsItemSelected(item)) true else super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        const val PERMISSIONS_REQUEST_CODE = 123
     }
 
 

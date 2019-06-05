@@ -47,7 +47,9 @@ class ProjectDocumentsManagerFragment : Fragment() {
     private lateinit var toolbarImageViewPhoto: ImageView
     private lateinit var pictureFilePath: String
 
-
+    private var projectId: Int = 0
+    private var projectName: String = ""
+    private lateinit var currentPhotoPath: String
 
 
     override fun onAttach(context: Context?) {
@@ -58,14 +60,20 @@ class ProjectDocumentsManagerFragment : Fragment() {
     }
 
     @Throws(IOException::class)
-    private fun getPictureFile(): File {
-        val timeStamp = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
-        val pictureFile = "projectResourceManager_$timeStamp"
-
-        val storageDir = getExternalStorageDirectory()
-        val image = File.createTempFile(pictureFile, ".jpg", storageDir)
-        pictureFilePath = image.absolutePath
-        return image
+    private fun createImageFile(): File {
+        println("AL MENOS PASA PRO EL PRICIPIO DE CREATE IMAGE FILE")
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = getExternalStorageDirectory()
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            println("?????")
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
     }
 
     private fun sendTakePictureIntent() {
@@ -77,7 +85,7 @@ class ProjectDocumentsManagerFragment : Fragment() {
 
             var pictureFile: File?
             try {
-                pictureFile = getPictureFile()
+                pictureFile = createImageFile()
             } catch (ex: IOException) {
                 ex.printStackTrace()
                 Toast.makeText(
@@ -90,7 +98,7 @@ class ProjectDocumentsManagerFragment : Fragment() {
 
             if (pictureFile != null) {
                 val photoURI = FileProvider.getUriForFile(
-                    parentFragment!!.context!!,
+                    context!!,
                     "io.github.alvarosanzrodrigo.projectresourcemanager",
                     pictureFile
                 )
@@ -100,29 +108,15 @@ class ProjectDocumentsManagerFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
-    ) {
-        when (requestCode) {
-            1 -> {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    sendTakePictureIntent()
-                } else {
-                    Toast.makeText(context, "Necesitamos tus permisos para poder guardar tus fotos!", Toast.LENGTH_SHORT).show()
-                }
-                return
-            }
-        }// other 'case' lines to check for other
-        // permissions this app might request
-    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        projectId = arguments?.get("projectId") as Int
+        projectName = arguments?.get("projectName") as String
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_project_manager, container, false)
         morph = rootView.findViewById(R.id.fabtoolbar)
@@ -155,6 +149,8 @@ class ProjectDocumentsManagerFragment : Fragment() {
             }
         }
         viewManager = LinearLayoutManager(activity)
+
+        //here is where I need to do all the LiveData things, one retrieved the project and the project name
         viewAdapter = AdapterDocument(items)
         recyclerView = rootView.findViewById<RecyclerView>(R.id.rv_documents).apply {
             setHasFixedSize(true)
