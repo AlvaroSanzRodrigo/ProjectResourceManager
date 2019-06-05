@@ -59,4 +59,8 @@ dependencies {
     def lifecycle_version = "1.1.1"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 
+    //MediaPicker library for geting images and video
+    implementation 'com.robertlevonyan.components:Picker:1.1.5'
+
+
 }
