@@ -62,5 +62,8 @@ dependencies {
     //MediaPicker library for geting images and video
     implementation 'com.robertlevonyan.components:Picker:1.1.5'
 
+    //same as above
+    implementation 'net.alhazmy13.MediaPicker:libary:2.1.1'
+
 
 }

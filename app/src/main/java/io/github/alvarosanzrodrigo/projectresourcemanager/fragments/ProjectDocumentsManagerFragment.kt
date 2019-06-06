@@ -2,6 +2,7 @@ package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -35,6 +36,7 @@ import com.robertlevonyan.components.picker.ItemModel
 import com.robertlevonyan.components.picker.PickerDialog
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
+import net.alhazmy13.mediapicker.Image.ImagePicker
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.net.URI
@@ -71,7 +73,8 @@ class ProjectDocumentsManagerFragment : Fragment() {
         println("AL MENOS PASA PRO EL PRICIPIO DE CREATE IMAGE FILE")
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File = getExternalStorageDirectory()
+        val storageDir: File =
+            File(Environment.getExternalStorageDirectory().path + "/ProjectResourceManager/" + projectName + "/pics/")
 
         return File.createTempFile(
             "JPEG_${timeStamp}_", /* prefix */
@@ -85,7 +88,6 @@ class ProjectDocumentsManagerFragment : Fragment() {
     }
 
     private fun sendTakePictureIntent() {
-
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
         if (cameraIntent.resolveActivity(context!!.packageManager) != null) {
@@ -111,52 +113,23 @@ class ProjectDocumentsManagerFragment : Fragment() {
                     pictureFile
                 )
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                startActivityForResult(cameraIntent, 1)
             }
+            startActivityForResult(cameraIntent, 1)
         }
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    fun savePicture(uri: Uri) {
-        val picture = File(uri.path).createNewFile()
-        val savedPicturePath = File(Environment.getExternalStorageDirectory().path + "/ProjectResourceManager/"+projectName+"/pics/")
-        savedPicturePath.mkdirs()
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            savedPicturePath
-        ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
-        }
-        //val out = this.context?.contentResolver?.openOutputStream(uri)
-        //this.context?.contentResolver?.openInputStream(uri)
-        Toast.makeText(this.context, projectName, Toast.LENGTH_SHORT).show()
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            //here goes the intent to go to the picture info form :)
+        }
     }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         projectId = arguments?.get("projectId") as Int
         projectName = arguments?.get("projectName") as String
-
-        val pickerDialog = PickerDialog.Builder(this@ProjectDocumentsManagerFragment)// Activity or Fragment
-            .setTitle("Choose from")
-            .setItems(ArrayList(listOf(ItemModel(ItemModel.ITEM_CAMERA), ItemModel(ItemModel.ITEM_GALLERY))))
-            .setDialogStyle(PickerDialog.DIALOG_MATERIAL)
-            .create()
-
-        pickerDialog.setPickerCloseListener { type, uri ->
-            when (type) {
-                ItemModel.ITEM_CAMERA -> savePicture(uri)/* do something with the photo you've taken */
-                ItemModel.ITEM_GALLERY -> savePicture(uri)/* do something with the image you've chosen */
-            }
-        }
 
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_project_manager, container, false)
@@ -174,8 +147,7 @@ class ProjectDocumentsManagerFragment : Fragment() {
         }
         toolbarImageViewPhoto = rootView.findViewById<ImageView>(R.id.toolbar_image).apply {
             this.setOnClickListener {
-                pickerDialog.show()
-                //sendTakePictureIntent()
+                sendTakePictureIntent()
                 morph.hide()
             }
         }
