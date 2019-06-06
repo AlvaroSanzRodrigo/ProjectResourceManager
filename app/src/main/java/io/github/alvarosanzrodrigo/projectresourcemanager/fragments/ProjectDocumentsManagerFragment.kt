@@ -37,6 +37,7 @@ import android.os.Environment.getExternalStorageDirectory
 import android.support.v4.app.ActivityCompat
 import com.robertlevonyan.components.picker.ItemModel
 import com.robertlevonyan.components.picker.PickerDialog
+import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddPictureData
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CameraOrGalleryDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
@@ -48,6 +49,11 @@ import java.text.SimpleDateFormat
 
 
 class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragment.OnClickedOptionListener {
+
+    companion object {
+        const val  IMAGE_PATH = "IMAGE_PATH"
+    }
+
     override fun onOptionChoosed(optionChoosed: Int) {
         when (optionChoosed) {
             1 -> sendTakePictureIntent()
@@ -145,6 +151,12 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == RESULT_OK) {
             //here goes the intent to go to the picture info form :)
+            var bundle = Bundle()
+            bundle.putString(IMAGE_PATH, currentPhotoPath)
+            val addPictureDataIntent = Intent(activity,AddPictureData::class.java)
+            addPictureDataIntent.putExtras(bundle)
+            startActivity(addPictureDataIntent)
+
         } else if (requestCode == 2 && resultCode == RESULT_OK) {
 
             var imageBitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, data?.data)
@@ -176,13 +188,22 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             } catch (e: IOException ) {
                 e.printStackTrace()
             }
+
+             //here goes the intent to go to the picture info form :)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            projectId = it.get("projectId") as Int
+            projectName = it.get("projectName") as String
         }
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        projectId = arguments?.get("projectId") as Int
-        projectName = arguments?.get("projectName") as String
+
 
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_project_manager, container, false)

@@ -1,4 +1,4 @@
-package io.github.alvarosanzrodrigo.projectresourcemanager
+package io.github.alvarosanzrodrigo.projectresourcemanager.activities
 
 import android.Manifest
 import android.os.Bundle
@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.Toast
+import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterProjects
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.NewProjectDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.ProjectListFragment
@@ -56,7 +57,10 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener 
         setContentView(R.layout.activity_main)
 
         dl = findViewById(R.id.activity_main)
-        t = ActionBarDrawerToggle(this, dl, R.string.Open, R.string.Close)
+        t = ActionBarDrawerToggle(this, dl,
+            R.string.Open,
+            R.string.Close
+        )
         dl.addDrawerListener(t)
         t.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -70,7 +74,9 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener 
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
 
-        managePermissions = ManagePermissions(this,permissionsList, PERMISSIONS_REQUEST_CODE)
+        managePermissions = ManagePermissions(this,permissionsList,
+            PERMISSIONS_REQUEST_CODE
+        )
         managePermissions.checkPermissions()
 
 
