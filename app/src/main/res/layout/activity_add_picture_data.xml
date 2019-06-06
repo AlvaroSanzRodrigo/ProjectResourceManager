@@ -19,7 +19,7 @@
                        android:layout_height="400dp"
                        android:padding="8dp"
                        android:contentDescription="@string/image"
-
+                       android:id="@+id/add_picture_data_image"
                        tools:srcCompat="@drawable/ic_image"/>
 
             <android.support.design.widget.TextInputLayout

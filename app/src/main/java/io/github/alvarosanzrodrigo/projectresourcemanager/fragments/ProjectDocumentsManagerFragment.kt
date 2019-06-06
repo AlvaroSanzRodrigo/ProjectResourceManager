@@ -1,51 +1,34 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
-
-import io.github.alvarosanzrodrigo.projectresourcemanager.R
-import java.util.*
-import kotlin.collections.ArrayList
-import android.provider.MediaStore
-import android.support.v4.content.FileProvider
 import android.widget.Toast
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Picture
-import android.net.Uri
-import android.os.Environment
-import java.io.File
-import java.io.IOException
-import android.os.Environment.DIRECTORY_PICTURES
-import android.os.Environment.getExternalStorageDirectory
-import android.support.v4.app.ActivityCompat
-import com.robertlevonyan.components.picker.ItemModel
-import com.robertlevonyan.components.picker.PickerDialog
+import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
+import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddPictureData
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CameraOrGalleryDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
-import net.alhazmy13.mediapicker.Image.ImagePicker
+import java.io.File
 import java.io.FileOutputStream
-import java.io.OutputStream
-import java.net.URI
+import java.io.IOException
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragment.OnClickedOptionListener {
@@ -224,7 +207,6 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
                 val chooser = CameraOrGalleryDialogFragment()
                 chooser.mCallBack = this@ProjectDocumentsManagerFragment
                 chooser.show(fragmentManager, "chooser")
-                //sendTakePictureIntent()
                 morph.hide()
             }
         }

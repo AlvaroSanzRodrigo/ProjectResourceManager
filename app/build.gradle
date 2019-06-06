@@ -59,11 +59,10 @@ dependencies {
     def lifecycle_version = "1.1.1"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 
-    //MediaPicker library for geting images and video
-    implementation 'com.robertlevonyan.components:Picker:1.1.5'
+    //Picasso for loading images
+    def picasso_version = "2.71828"
+    implementation "com.squareup.picasso:picasso:$picasso_version"
 
-    //same as above
-    implementation 'net.alhazmy13.MediaPicker:libary:2.1.1'
 
 
 }
