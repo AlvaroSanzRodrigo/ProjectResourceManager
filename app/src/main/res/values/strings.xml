@@ -7,4 +7,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="project_name_edittxt">Project name</string>
     <string name="save">save</string>
+    <string name="choose_gallery_or_camera">Choose from:</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 </resources>

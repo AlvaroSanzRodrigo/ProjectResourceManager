@@ -24,6 +24,9 @@ import android.support.v4.content.FileProvider
 import android.widget.Toast
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Picture
 import android.net.Uri
 import android.os.Environment
@@ -35,6 +38,7 @@ import android.support.v4.app.ActivityCompat
 import com.robertlevonyan.components.picker.ItemModel
 import com.robertlevonyan.components.picker.PickerDialog
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
+import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CameraOrGalleryDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
 import net.alhazmy13.mediapicker.Image.ImagePicker
 import java.io.FileOutputStream
@@ -43,7 +47,14 @@ import java.net.URI
 import java.text.SimpleDateFormat
 
 
-class ProjectDocumentsManagerFragment : Fragment() {
+class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragment.OnClickedOptionListener {
+    override fun onOptionChoosed(optionChoosed: Int) {
+        when (optionChoosed) {
+            1 -> sendTakePictureIntent()
+            2 -> sendGalleryPictureIntent()
+        }
+    }
+
     private var items: ArrayList<Document> = ArrayList()
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -87,11 +98,22 @@ class ProjectDocumentsManagerFragment : Fragment() {
         }
     }
 
+    private fun saveImageFromGallery() {
+
+    }
+
+    private fun sendGalleryPictureIntent() {
+
+        val cameraIntent = Intent(Intent.ACTION_GET_CONTENT)
+        cameraIntent.type = "image/*"
+        startActivityForResult(Intent.createChooser(cameraIntent, "Select Picture"), 2)
+    }
+
+
     private fun sendTakePictureIntent() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
         if (cameraIntent.resolveActivity(context!!.packageManager) != null) {
-            startActivityForResult(cameraIntent, 1)
 
             var pictureFile: File?
             try {
@@ -123,6 +145,37 @@ class ProjectDocumentsManagerFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == RESULT_OK) {
             //here goes the intent to go to the picture info form :)
+        } else if (requestCode == 2 && resultCode == RESULT_OK) {
+
+            var imageBitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, data?.data)
+
+            var pictureFile: File?
+            try {
+                pictureFile = createImageFile()
+            } catch (ex: IOException) {
+                ex.printStackTrace()
+                Toast.makeText(
+                    context,
+                    "Photo file can't be created, please try again",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
+
+            if (pictureFile != null) {
+                val photoURI = FileProvider.getUriForFile(
+                    context!!,
+                    "io.github.alvarosanzrodrigo.projectresourcemanager",
+                    pictureFile
+                )
+            }
+
+            try {
+                val out =  FileOutputStream(pictureFile)
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            } catch (e: IOException ) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -147,7 +200,10 @@ class ProjectDocumentsManagerFragment : Fragment() {
         }
         toolbarImageViewPhoto = rootView.findViewById<ImageView>(R.id.toolbar_image).apply {
             this.setOnClickListener {
-                sendTakePictureIntent()
+                val chooser = CameraOrGalleryDialogFragment()
+                chooser.mCallBack = this@ProjectDocumentsManagerFragment
+                chooser.show(fragmentManager, "chooser")
+                //sendTakePictureIntent()
                 morph.hide()
             }
         }
