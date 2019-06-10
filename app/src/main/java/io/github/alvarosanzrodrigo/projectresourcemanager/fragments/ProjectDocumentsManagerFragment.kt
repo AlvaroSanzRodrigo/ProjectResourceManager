@@ -27,6 +27,7 @@ import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.Docume
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CameraOrGalleryDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
 import io.github.alvarosanzrodrigo.projectresourcemanager.viewModels.DocumentViewModel
+import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -40,13 +41,22 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
     companion object {
         const val  IMAGE_PATH = "IMAGE_PATH"
         const val  PROJECT_ID = "PROJECT_ID"
+        private const val REQUEST_VIDEO_CAPTURE = 3
     }
 
     override fun onOptionChoosed(optionChoosed: Int) {
-        when (optionChoosed) {
-            1 -> sendTakePictureIntent()
-            2 -> sendGalleryPictureIntent()
+        if (isPictureChoosed) {
+            when (optionChoosed) {
+                1 -> sendTakePictureIntent()
+                2 -> sendGalleryPictureIntent()
+            }
+        } else {
+            when (optionChoosed) {
+                1 -> dispatchTakeVideoIntent()
+                2 -> sendGalleryVideoIntent()
+            }
         }
+
     }
 
     private var items: ArrayList<Document> = ArrayList()
@@ -64,6 +74,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
     private var projectId: Int = 0
     private var projectName: String = ""
     private lateinit var currentPhotoPath: String
+    private var isPictureChoosed: Boolean = true
 
 
     override fun onAttach(context: Context?) {
@@ -89,8 +100,12 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         }
     }
 
-    private fun saveImageFromGallery() {
-
+    private fun dispatchTakeVideoIntent() {
+        Intent(MediaStore.ACTION_VIDEO_CAPTURE).also { takeVideoIntent ->
+            takeVideoIntent.resolveActivity(context!!.packageManager)?.also {
+                startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE)
+            }
+        }
     }
 
     private fun sendGalleryPictureIntent() {
@@ -98,6 +113,13 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         val cameraIntent = Intent(Intent.ACTION_GET_CONTENT)
         cameraIntent.type = "image/*"
         startActivityForResult(Intent.createChooser(cameraIntent, "Select Picture"), 2)
+    }
+
+    private fun sendGalleryVideoIntent() {
+
+        val cameraIntent = Intent(Intent.ACTION_GET_CONTENT)
+        cameraIntent.type = "video/*"
+        startActivityForResult(Intent.createChooser(cameraIntent, "Select Picture"), REQUEST_VIDEO_CAPTURE)
     }
 
 
@@ -182,6 +204,8 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             val addPictureDataIntent = Intent(activity,AddPictureData::class.java)
             addPictureDataIntent.putExtras(bundle)
             startActivity(addPictureDataIntent)
+        } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+
         }
     }
 
@@ -231,6 +255,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         }
         toolbarImageViewPhoto = rootView.findViewById<ImageView>(R.id.toolbar_image).apply {
             this.setOnClickListener {
+                isPictureChoosed = true
                 val chooser = CameraOrGalleryDialogFragment()
                 chooser.mCallBack = this@ProjectDocumentsManagerFragment
                 chooser.show(fragmentManager, "chooser")
@@ -244,6 +269,10 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         }
         toolbarImageViewVideo = rootView.findViewById<ImageView>(R.id.toolbar_video).apply {
             this.setOnClickListener {
+                isPictureChoosed = false
+                val chooser = CameraOrGalleryDialogFragment()
+                chooser.mCallBack = this@ProjectDocumentsManagerFragment
+                chooser.show(fragmentManager, "chooser")
                 morph.hide()
             }
         }
