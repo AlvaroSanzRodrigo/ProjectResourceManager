@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
-    "identityHash": "bb8220ef8e8dc1a23c580a725ba810ba",
+    "version": 6,
+    "identityHash": "5da393d57434b5b592cd42c885025e5c",
     "entities": [
       {
         "tableName": "Project",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "Document",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `projectId` INTEGER NOT NULL, `path` TEXT NOT NULL, `notes` TEXT NOT NULL, `description` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, FOREIGN KEY(`projectId`) REFERENCES `Project`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `projectId` INTEGER NOT NULL, `title` TEXT NOT NULL, `path` TEXT NOT NULL, `notes` TEXT NOT NULL, `tags` TEXT NOT NULL, `description` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, FOREIGN KEY(`projectId`) REFERENCES `Project`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -53,6 +53,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "path",
             "columnName": "path",
             "affinity": "TEXT",
@@ -61,6 +67,12 @@
           {
             "fieldPath": "notes",
             "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tags",
+            "columnName": "tags",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -107,7 +119,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"bb8220ef8e8dc1a23c580a725ba810ba\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5da393d57434b5b592cd42c885025e5c\")"
     ]
   }
 }

@@ -1,53 +1,47 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
-
-import io.github.alvarosanzrodrigo.projectresourcemanager.R
-import java.util.*
-import kotlin.collections.ArrayList
-import android.provider.MediaStore
-import android.support.v4.content.FileProvider
 import android.widget.Toast
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Picture
-import android.net.Uri
-import android.os.Environment
-import java.io.File
-import java.io.IOException
-import android.os.Environment.DIRECTORY_PICTURES
-import android.os.Environment.getExternalStorageDirectory
-import android.support.v4.app.ActivityCompat
-import com.robertlevonyan.components.picker.ItemModel
-import com.robertlevonyan.components.picker.PickerDialog
+import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
+import io.github.alvarosanzrodrigo.projectresourcemanager.R
+import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddPictureData
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
+import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.DocumentDaoRepository
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CameraOrGalleryDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
-import net.alhazmy13.mediapicker.Image.ImagePicker
+import io.github.alvarosanzrodrigo.projectresourcemanager.viewModels.DocumentViewModel
+import java.io.File
 import java.io.FileOutputStream
-import java.io.OutputStream
-import java.net.URI
+import java.io.IOException
 import java.text.SimpleDateFormat
+import java.util.Date
+import kotlin.collections.ArrayList
 
 
 class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragment.OnClickedOptionListener {
+
+    companion object {
+        const val  IMAGE_PATH = "IMAGE_PATH"
+        const val  PROJECT_ID = "PROJECT_ID"
+    }
+
     override fun onOptionChoosed(optionChoosed: Int) {
         when (optionChoosed) {
             1 -> sendTakePictureIntent()
@@ -74,9 +68,6 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        context?.let {
-            //loadItems(it)
-        }
     }
 
     @Throws(IOException::class)
@@ -145,6 +136,13 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == RESULT_OK) {
             //here goes the intent to go to the picture info form :)
+            var bundle = Bundle()
+            bundle.putString(IMAGE_PATH, currentPhotoPath)
+            bundle.putInt(PROJECT_ID, projectId)
+            val addPictureDataIntent = Intent(activity,AddPictureData::class.java)
+            addPictureDataIntent.putExtras(bundle)
+            startActivity(addPictureDataIntent)
+
         } else if (requestCode == 2 && resultCode == RESULT_OK) {
 
             var imageBitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, data?.data)
@@ -176,13 +174,46 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             } catch (e: IOException ) {
                 e.printStackTrace()
             }
+
+             //here goes the intent to go to the picture info form :)
+            var bundle = Bundle()
+            bundle.putString(IMAGE_PATH, currentPhotoPath)
+            bundle.putInt(PROJECT_ID, projectId)
+            val addPictureDataIntent = Intent(activity,AddPictureData::class.java)
+            addPictureDataIntent.putExtras(bundle)
+            startActivity(addPictureDataIntent)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            projectId = it.get("projectId") as Int
+            projectName = it.get("projectName") as String
         }
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        projectId = arguments?.get("projectId") as Int
-        projectName = arguments?.get("projectName") as String
+
+        //Ready our observable view model
+        activity?.application?.let { DocumentDaoRepository.getInstance(it) }?.let {
+
+            ViewModelProviders.of(this)
+                .get(DocumentViewModel::class.java)
+                .getAll(it).observe(
+                    this,
+                    Observer { list ->
+                        if (list != null) {
+                            items.clear()
+                            for (item in list) {
+                                items.add(item)
+                            }
+                        }
+                        viewAdapter.notifyDataSetChanged()
+                    }
+                )
+        }
 
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_project_manager, container, false)
@@ -203,7 +234,6 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
                 val chooser = CameraOrGalleryDialogFragment()
                 chooser.mCallBack = this@ProjectDocumentsManagerFragment
                 chooser.show(fragmentManager, "chooser")
-                //sendTakePictureIntent()
                 morph.hide()
             }
         }

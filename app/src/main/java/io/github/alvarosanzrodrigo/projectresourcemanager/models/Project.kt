@@ -12,7 +12,4 @@ data class Project(
     var date: Date){
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null
-
-    //This is ignored in the database but will be filled
-    @Ignore var documents: HashMap<Int, Document> = HashMap()
 }
