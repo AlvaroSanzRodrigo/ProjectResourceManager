@@ -1,6 +1,8 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
 
 import android.app.Activity.RESULT_OK
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -21,13 +23,15 @@ import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddPictureData
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
+import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.DocumentDaoRepository
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CameraOrGalleryDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
+import io.github.alvarosanzrodrigo.projectresourcemanager.viewModels.DocumentViewModel
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import kotlin.collections.ArrayList
 
 
@@ -64,9 +68,6 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        context?.let {
-            //loadItems(it)
-        }
     }
 
     @Throws(IOException::class)
@@ -195,6 +196,24 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+        //Ready our observable view model
+        activity?.application?.let { DocumentDaoRepository.getInstance(it) }?.let {
+
+            ViewModelProviders.of(this)
+                .get(DocumentViewModel::class.java)
+                .getAll(it).observe(
+                    this,
+                    Observer { list ->
+                        if (list != null) {
+                            items.clear()
+                            for (item in list) {
+                                items.add(item)
+                            }
+                        }
+                        viewAdapter.notifyDataSetChanged()
+                    }
+                )
+        }
 
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_project_manager, container, false)

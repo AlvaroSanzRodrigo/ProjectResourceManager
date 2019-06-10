@@ -44,7 +44,7 @@ class AddPictureData : AppCompatActivity() {
     }
 
     private fun savePicture() {
-        val picture = listOf(Document(projectId, picturePath, notes.text.toString(), listOf(""), description.text.toString(), Date(), DocumentTypes.PICTURE))
+        val picture = listOf(Document(projectId,title.text.toString(), picturePath, notes.text.toString(), listOf(""), description.text.toString(), Date(), DocumentTypes.PICTURE))
         println(picture)
         application?.let { DocumentDaoRepository.getInstance(it).insertAll(picture) }
 

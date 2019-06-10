@@ -15,9 +15,9 @@ import java.util.*
 )
 data class Document(
     var projectId: Int,
+    var title: String,
     var path: String,
     var notes: String,
-
     @TypeConverters(ListConverter::class)
     var tags:List<String>,
     var description: String,

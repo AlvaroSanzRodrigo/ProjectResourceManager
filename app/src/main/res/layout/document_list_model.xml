@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="18dp"
                     android:textStyle="bold"
-                    android:text="Type"/>
+                    android:text="@string/type"/>
 
             <TextView
                     android:id="@+id/document_list_model_date"
@@ -47,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16dp"
-                    android:text="Date"/>
+                    android:text="@string/date"/>
         </LinearLayout>
     </LinearLayout>
     </android.support.v7.widget.CardView>

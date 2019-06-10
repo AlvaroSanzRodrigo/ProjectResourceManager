@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
+import io.github.alvarosanzrodrigo.projectresourcemanager.enums.DocumentTypes
 
 class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<AdapterDocument.MyViewHolder>() {
 
@@ -34,6 +36,39 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
             // - replace the contents of the view with that element
 
             //holder.view.findViewById<TextView>(R.id.document_list_model_type).text = items[position].type
+
+            when (items[position].type){
+                DocumentTypes.TEXT -> Picasso.get()
+                    .load(R.drawable.ic_text)
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_image_error)
+                    .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
+                DocumentTypes.PICTURE -> Picasso.get()
+                    .load(R.drawable.ic_image)
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_image_error)
+                    .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
+
+                DocumentTypes.AUDIO -> Picasso.get()
+                    .load(R.drawable.ic_audio)
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_image_error)
+                    .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
+
+                DocumentTypes.VIDEO -> Picasso.get()
+                    .load(R.drawable.ic_video)
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_image_error)
+                    .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
+
+                DocumentTypes.ERROR -> Picasso.get()
+                    .load(R.drawable.ic_image_error)
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_image_error)
+                    .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
+            }
+
+            holder.view.findViewById<TextView>(R.id.document_list_model_type).text = items[position].title
             holder.view.findViewById<TextView>(R.id.document_list_model_date).text = items[position].date.toString()
         }
 

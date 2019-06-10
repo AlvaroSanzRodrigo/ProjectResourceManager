@@ -32,7 +32,6 @@ class ProjectListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        // Inflate the layout for this fragment
         //Ready our observable view model
         activity?.application?.let { ProjectDaoRepository.getInstance(it) }?.let {
 
@@ -51,7 +50,7 @@ class ProjectListFragment : Fragment() {
                 )
         }
 
-
+        // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_project_list, container, false)
         viewManager = LinearLayoutManager(activity)
         viewAdapter = AdapterProjects(items)
