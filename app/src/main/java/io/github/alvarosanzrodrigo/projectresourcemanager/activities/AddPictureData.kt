@@ -44,10 +44,10 @@ class AddPictureData : AppCompatActivity() {
     }
 
     private fun savePicture() {
-        val picture = listOf(Document(projectId,title.text.toString(), picturePath, notes.text.toString(), listOf(""), description.text.toString(), Date(), DocumentTypes.PICTURE))
+        val validatedTitle = if (title.text.isEmpty()) "No Title" else title.text.toString()
+        val picture = listOf(Document(projectId, validatedTitle, picturePath, notes.text.toString(), listOf(""), description.text.toString(), Date(), DocumentTypes.PICTURE))
         println(picture)
         application?.let { DocumentDaoRepository.getInstance(it).insertAll(picture) }
-
     }
 
     private fun bindView(){

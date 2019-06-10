@@ -40,11 +40,12 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
             when (items[position].type){
                 DocumentTypes.TEXT -> Picasso.get()
                     .load(R.drawable.ic_text)
+                    .fit()
                     .placeholder(R.drawable.ic_image_placeholder)
                     .error(R.drawable.ic_image_error)
                     .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
                 DocumentTypes.PICTURE -> Picasso.get()
-                    .load(R.drawable.ic_image)
+                    .load("file://" + items[position].path)
                     .placeholder(R.drawable.ic_image_placeholder)
                     .error(R.drawable.ic_image_error)
                     .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
