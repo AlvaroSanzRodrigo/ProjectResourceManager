@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -94,7 +95,23 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             ".jpg", /* suffix */
             storageDir /* directory */
         ).apply {
-            println("?????")
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createVideoFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File =
+            File(Environment.getExternalStorageDirectory().path + "/ProjectResourceManager/" + projectName + "/video/")
+
+        return File.createTempFile(
+            "MP4_${timeStamp}_", /* prefix */
+            ".mp4", /* suffix */
+            storageDir /* directory */
+        ).apply {
             // Save a file: path for use with ACTION_VIEW intents
             currentPhotoPath = absolutePath
         }
@@ -205,7 +222,9 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             addPictureDataIntent.putExtras(bundle)
             startActivity(addPictureDataIntent)
         } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-
+            val videoUri: Uri = data?.data!!
+            val videoFile = createVideoFile()
+            //val videoSource = File()
         }
     }
 
