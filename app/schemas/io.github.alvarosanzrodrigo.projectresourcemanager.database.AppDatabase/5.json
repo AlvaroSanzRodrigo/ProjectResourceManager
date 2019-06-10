@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
-    "identityHash": "bb8220ef8e8dc1a23c580a725ba810ba",
+    "version": 5,
+    "identityHash": "a15397703613f168a7793c8df0474398",
     "entities": [
       {
         "tableName": "Project",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "Document",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `projectId` INTEGER NOT NULL, `path` TEXT NOT NULL, `notes` TEXT NOT NULL, `description` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, FOREIGN KEY(`projectId`) REFERENCES `Project`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `projectId` INTEGER NOT NULL, `path` TEXT NOT NULL, `notes` TEXT NOT NULL, `tags` TEXT NOT NULL, `description` TEXT NOT NULL, `date` INTEGER NOT NULL, `type` TEXT NOT NULL, FOREIGN KEY(`projectId`) REFERENCES `Project`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -61,6 +61,12 @@
           {
             "fieldPath": "notes",
             "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tags",
+            "columnName": "tags",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -107,7 +113,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"bb8220ef8e8dc1a23c580a725ba810ba\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a15397703613f168a7793c8df0474398\")"
     ]
   }
 }

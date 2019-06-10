@@ -35,6 +35,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
     companion object {
         const val  IMAGE_PATH = "IMAGE_PATH"
+        const val  PROJECT_ID = "PROJECT_ID"
     }
 
     override fun onOptionChoosed(optionChoosed: Int) {
@@ -136,6 +137,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             //here goes the intent to go to the picture info form :)
             var bundle = Bundle()
             bundle.putString(IMAGE_PATH, currentPhotoPath)
+            bundle.putInt(PROJECT_ID, projectId)
             val addPictureDataIntent = Intent(activity,AddPictureData::class.java)
             addPictureDataIntent.putExtras(bundle)
             startActivity(addPictureDataIntent)
@@ -173,6 +175,12 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             }
 
              //here goes the intent to go to the picture info form :)
+            var bundle = Bundle()
+            bundle.putString(IMAGE_PATH, currentPhotoPath)
+            bundle.putInt(PROJECT_ID, projectId)
+            val addPictureDataIntent = Intent(activity,AddPictureData::class.java)
+            addPictureDataIntent.putExtras(bundle)
+            startActivity(addPictureDataIntent)
         }
     }
 

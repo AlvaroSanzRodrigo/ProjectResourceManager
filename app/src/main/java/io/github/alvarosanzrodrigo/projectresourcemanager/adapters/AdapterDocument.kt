@@ -33,7 +33,7 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
 
-            holder.view.findViewById<TextView>(R.id.document_list_model_type).text = items[position].type
+            //holder.view.findViewById<TextView>(R.id.document_list_model_type).text = items[position].type
             holder.view.findViewById<TextView>(R.id.document_list_model_date).text = items[position].date.toString()
         }
 

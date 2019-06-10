@@ -12,8 +12,6 @@ import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.ProjectDaoRepository
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Project
 import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
 import java.util.*
 
 class NewProjectDialogFragment : DialogFragment(){
