@@ -28,6 +28,12 @@ android {
         }
     }
 }
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -62,6 +68,15 @@ dependencies {
     //Picasso for loading images
     def picasso_version = "2.71828"
     implementation "com.squareup.picasso:picasso:$picasso_version"
+
+    //audio recorder library
+    def audiorecorder_version = "0.3.0"
+    compile "com.github.adrielcafe:AndroidAudioRecorder:$audiorecorder_version"
+
+    // audio player library
+    def audioView_version = "1.3"
+    implementation "com.4ert:audioview:$audioView_version"
+
 
 
 }
