@@ -24,12 +24,10 @@ import android.widget.Toast
 import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
-import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddAudioData
-import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddPictureData
-import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddTextData
-import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddVideoData
+import io.github.alvarosanzrodrigo.projectresourcemanager.activities.*
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
 import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.DocumentDaoRepository
+import io.github.alvarosanzrodrigo.projectresourcemanager.enums.DocumentTypes
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CameraOrGalleryDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
 import io.github.alvarosanzrodrigo.projectresourcemanager.utils.FileUtil
@@ -44,7 +42,8 @@ import java.util.Date
 import kotlin.collections.ArrayList
 
 
-class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragment.OnClickedOptionListener {
+class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragment.OnClickedOptionListener,
+    AdapterDocument.OnClickedItemListener {
 
     companion object {
         const val IMAGE_PATH = "IMAGE_PATH"
@@ -52,6 +51,11 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         const val PROJECT_NAME = "PROJECT_NAME"
         const val PROJECT_ID = "PROJECT_ID"
         const val VIDEO_URI = "VIDEO_URI"
+        const val DOCUMENT_TITLE = "DOCUMENT_TITLE"
+        const val DOCUMENT_DESCRIPTION = "DOCUMENT_DESCRIPTION"
+        const val DOCUMENT_NOTES = "DOCUMENT_NOTES"
+        const val DOCUMENT_ID = "DOCUMENT_ID"
+        const val DOCUMENT_PATH = "DOCUMENT_PATH"
         private const val REQUEST_VIDEO_CAPTURE = 3
         private const val REQUEST_VIDEO_GALLERY = 4
         private const val REQUEST_AUDIO_CAPTURE = 5
@@ -71,6 +75,48 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         }
 
     }
+
+    override fun onItemSelected(document: Document) {
+
+        var bundle = Bundle()
+        bundle.putString(DOCUMENT_DESCRIPTION, document.description)
+        bundle.putString(DOCUMENT_NOTES, document.notes)
+        bundle.putString(DOCUMENT_TITLE, document.title)
+        bundle.putString(DOCUMENT_PATH, document.path)
+        bundle.putInt(PROJECT_ID, projectId)
+        bundle.putInt(DOCUMENT_ID, document.projectId)
+
+        val viewDataIntent: Intent
+        when (document.type) {
+            DocumentTypes.PICTURE -> {
+                viewDataIntent = Intent(activity, ViewPictureData::class.java).apply {
+                    putExtras(bundle)
+                }
+                startActivity(viewDataIntent)
+            }
+            DocumentTypes.TEXT -> {
+                viewDataIntent = Intent(activity, ViewPictureData::class.java).apply {
+                    putExtras(bundle)
+                }
+                startActivity(viewDataIntent)
+            }
+            DocumentTypes.VIDEO -> {
+                viewDataIntent = Intent(activity, ViewPictureData::class.java).apply {
+                    putExtras(bundle)
+                }
+                startActivity(viewDataIntent)
+            }
+            DocumentTypes.AUDIO -> {
+                viewDataIntent = Intent(activity, ViewPictureData::class.java).apply {
+                    putExtras(bundle)
+                }
+                startActivity(viewDataIntent)
+            }
+            DocumentTypes.ERROR -> context?.toast("Error loading document")
+        }
+
+    }
+
 
     private var items: ArrayList<Document> = ArrayList()
     private lateinit var recyclerView: RecyclerView
@@ -144,7 +190,8 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
     private fun sendRecordingAudioIntent() {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        currentPath = Environment.getExternalStorageDirectory().path + "/ProjectResourceManager/" + projectName + "/audio/AUD_$timeStamp" + ".WAV"
+        currentPath =
+            Environment.getExternalStorageDirectory().path + "/ProjectResourceManager/" + projectName + "/audio/AUD_$timeStamp" + ".WAV"
 
 
         AndroidAudioRecorder.with(this)
@@ -337,7 +384,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             }
             context?.toast("Cancelled")
 
-        }else if (requestCode == REQUEST_AUDIO_CAPTURE && resultCode == RESULT_OK) {
+        } else if (requestCode == REQUEST_AUDIO_CAPTURE && resultCode == RESULT_OK) {
 
             /*
 
@@ -369,6 +416,8 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             projectId = it.get("projectId") as Int
             projectName = it.get("projectName") as String
         }
+        viewAdapter = AdapterDocument(items)
+        (viewAdapter as AdapterDocument).mCallBack = this
     }
 
 
@@ -392,6 +441,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
                     }
                 )
         }
+
 
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_project_manager, container, false)
@@ -434,7 +484,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         viewManager = LinearLayoutManager(activity)
 
         //here is where I need to do all the LiveData things, one retrieved the project and the project name
-        viewAdapter = AdapterDocument(items)
+
         recyclerView = rootView.findViewById<RecyclerView>(R.id.rv_documents).apply {
             setHasFixedSize(true)
             layoutManager = viewManager

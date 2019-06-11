@@ -78,5 +78,4 @@ dependencies {
     implementation "com.4ert:audioview:$audioView_version"
 
 
-
 }
