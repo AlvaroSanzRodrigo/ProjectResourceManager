@@ -21,8 +21,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
+import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddAudioData
 import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddPictureData
 import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddTextData
 import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddVideoData
@@ -46,11 +48,13 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
     companion object {
         const val IMAGE_PATH = "IMAGE_PATH"
+        const val AUDIO_PATH = "AUDIO_PATH"
         const val PROJECT_NAME = "PROJECT_NAME"
         const val PROJECT_ID = "PROJECT_ID"
         const val VIDEO_URI = "VIDEO_URI"
         private const val REQUEST_VIDEO_CAPTURE = 3
         private const val REQUEST_VIDEO_GALLERY = 4
+        private const val REQUEST_AUDIO_CAPTURE = 5
     }
 
     override fun onOptionChoosed(optionChoosed: Int) {
@@ -136,6 +140,25 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         val videoCameraIntent = Intent(Intent.ACTION_GET_CONTENT)
         videoCameraIntent.type = "video/*"
         startActivityForResult(videoCameraIntent, REQUEST_VIDEO_GALLERY)
+    }
+
+    private fun sendRecordingAudioIntent() {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        currentPath = Environment.getExternalStorageDirectory().path + "/ProjectResourceManager/" + projectName + "/audio/AUD_$timeStamp" + ".WAV"
+
+
+        AndroidAudioRecorder.with(this)
+            .setFilePath(currentPath)
+            .setColor(resources.getColor(R.color.accent_material_dark))
+            .setRequestCode(REQUEST_AUDIO_CAPTURE)
+            .recordFromFragment()
+
+
+        /**
+         * val recordingAudioIntent = Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION)
+        startActivityForResult(recordingAudioIntent, REQUEST_AUDIO_CAPTURE)
+         */
+
     }
 
 
@@ -309,11 +332,34 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             try {
                 val deleteFile = File(currentPath)
                 deleteFile.delete()
-            }catch (ex: Exception){
+            } catch (ex: Exception) {
                 context?.toast("Cancelled")
             }
             context?.toast("Cancelled")
 
+        }else if (requestCode == REQUEST_AUDIO_CAPTURE && resultCode == RESULT_OK) {
+
+            /*
+
+            val audioUri: Uri = data?.data!!
+
+            var audioFile = FileUtil().from(context!!, audioUri)
+            val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+            val audioOut: File =
+                File(Environment.getExternalStorageDirectory().path + "/ProjectResourceManager/" + projectName + "/audio/AUD_$timeStamp" + ".mp3")
+
+            audioFile.copyTo(audioOut)
+            currentPath = audioFile.path
+
+            */
+
+            var bundle = Bundle()
+            bundle.putString(AUDIO_PATH, currentPath)
+            bundle.putInt(PROJECT_ID, projectId)
+
+            val addAudioDataIntent = Intent(activity, AddAudioData::class.java)
+            addAudioDataIntent.putExtras(bundle)
+            startActivity(addAudioDataIntent)
         }
     }
 
@@ -357,7 +403,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         }
         toolbarImageViewAudio = rootView.findViewById<ImageView>(R.id.toolbar_audio).apply {
             this.setOnClickListener {
-
+                sendRecordingAudioIntent()
                 morph.hide()
             }
         }
@@ -396,59 +442,4 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         }
         return rootView
     }
-
-    /*
-    private fun loadItems(context: Context) {
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_image
-        )!!, Date(), "Imagen"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_audio
-        )!!, Date(), "Audio"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_video
-        )!!, Date(), "Video"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_text
-        )!!, Date(), "Text"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_image
-        )!!, Date(), "Imagen"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_audio
-        )!!, Date(), "Audio"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_video
-        )!!, Date(), "Video"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_text
-        )!!, Date(), "Text"))
-
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_image
-        )!!, Date(), "Imagen"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_audio
-        )!!, Date(), "Audio"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_video
-        )!!, Date(), "Video"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_text
-        )!!, Date(), "Text"))
-
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_image
-        )!!, Date(), "Imagen"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_audio
-        )!!, Date(), "Audio"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_video
-        )!!, Date(), "Video"))
-        items.add(Document(ContextCompat.getDrawable(context,
-            R.drawable.ic_text
-        )!!, Date(), "Text"))
-    }
-    */
 }
