@@ -27,7 +27,6 @@ class AddPictureData : AppCompatActivity() {
     private lateinit var notes: EditText
     private lateinit var save: Button
     private lateinit var cancel: Button
-    private var isOnCancel: Boolean = false
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -80,7 +79,6 @@ class AddPictureData : AppCompatActivity() {
             this.finish()
         }
         cancel.setOnClickListener {
-            isOnCancel = true
             println("attempting to delete")
             val deleteFile = File(picturePath)
             deleteFile.delete()
