@@ -71,7 +71,8 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener 
         val permissionsList = listOf(
             Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO
         )
 
         managePermissions = ManagePermissions(this,permissionsList,

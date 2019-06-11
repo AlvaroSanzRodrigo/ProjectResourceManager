@@ -1,5 +1,6 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager.Fragments
 
+import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -23,15 +24,18 @@ import android.widget.Toast
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddPictureData
+import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddVideoData
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
 import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.DocumentDaoRepository
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CameraOrGalleryDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
+import io.github.alvarosanzrodrigo.projectresourcemanager.utils.FileUtil
 import io.github.alvarosanzrodrigo.projectresourcemanager.viewModels.DocumentViewModel
 import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.collections.ArrayList
@@ -40,9 +44,11 @@ import kotlin.collections.ArrayList
 class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragment.OnClickedOptionListener {
 
     companion object {
-        const val  IMAGE_PATH = "IMAGE_PATH"
-        const val  PROJECT_ID = "PROJECT_ID"
+        const val IMAGE_PATH = "IMAGE_PATH"
+        const val PROJECT_ID = "PROJECT_ID"
+        const val VIDEO_URI = "VIDEO_URI"
         private const val REQUEST_VIDEO_CAPTURE = 3
+        private const val REQUEST_VIDEO_GALLERY = 4
     }
 
     override fun onOptionChoosed(optionChoosed: Int) {
@@ -74,7 +80,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
     private var projectId: Int = 0
     private var projectName: String = ""
-    private lateinit var currentPhotoPath: String
+    private lateinit var currentPath: String
     private var isPictureChoosed: Boolean = true
 
 
@@ -96,7 +102,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             storageDir /* directory */
         ).apply {
             // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
+            currentPath = absolutePath
         }
     }
 
@@ -113,15 +119,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             storageDir /* directory */
         ).apply {
             // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
-        }
-    }
-
-    private fun dispatchTakeVideoIntent() {
-        Intent(MediaStore.ACTION_VIDEO_CAPTURE).also { takeVideoIntent ->
-            takeVideoIntent.resolveActivity(context!!.packageManager)?.also {
-                startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE)
-            }
+            currentPath = absolutePath
         }
     }
 
@@ -133,12 +131,48 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
     }
 
     private fun sendGalleryVideoIntent() {
-
-        val cameraIntent = Intent(Intent.ACTION_GET_CONTENT)
-        cameraIntent.type = "video/*"
-        startActivityForResult(Intent.createChooser(cameraIntent, "Select Picture"), REQUEST_VIDEO_CAPTURE)
+        val videoCameraIntent = Intent(Intent.ACTION_GET_CONTENT)
+        videoCameraIntent.type = "video/*"
+        startActivityForResult(videoCameraIntent, REQUEST_VIDEO_GALLERY)
     }
 
+
+    private fun dispatchTakeVideoIntent() {
+
+        /*
+        Intent(MediaStore.ACTION_VIDEO_CAPTURE).also { takeVideoIntent ->
+            takeVideoIntent.resolveActivity(context!!.packageManager)?.also {
+                startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE)
+            }
+        }
+        */
+        val videoCameraIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        videoCameraIntent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true)
+
+
+        if (videoCameraIntent.resolveActivity(context!!.packageManager) != null) {
+            var videoFile: File?
+
+            try {
+                videoFile = createVideoFile()
+            } catch (ex: IOException) {
+                ex.printStackTrace()
+                context!!.toast("Video file can't be created, please try again")
+                return
+            }
+
+            if (videoFile != null) {
+                val videoUri = FileProvider.getUriForFile(
+                    context!!,
+                    "io.github.alvarosanzrodrigo.projectresourcemanager",
+                    videoFile
+                )
+                videoCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri)
+            }
+            startActivityForResult(videoCameraIntent, REQUEST_VIDEO_CAPTURE)
+        }
+
+    }
 
     private fun sendTakePictureIntent() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -176,14 +210,14 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         if (requestCode == 1 && resultCode == RESULT_OK) {
             //here goes the intent to go to the picture info form :)
             var bundle = Bundle()
-            bundle.putString(IMAGE_PATH, currentPhotoPath)
+            bundle.putString(IMAGE_PATH, currentPath)
             bundle.putInt(PROJECT_ID, projectId)
-            val addPictureDataIntent = Intent(activity,AddPictureData::class.java)
+            val addPictureDataIntent = Intent(activity, AddPictureData::class.java)
             addPictureDataIntent.putExtras(bundle)
             startActivity(addPictureDataIntent)
 
         } else if (requestCode == 2 && resultCode == RESULT_OK) {
-
+            data?.data?.path?.let { context?.toast(it) }
             var imageBitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, data?.data)
 
             var pictureFile: File?
@@ -208,23 +242,66 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             }
 
             try {
-                val out =  FileOutputStream(pictureFile)
+                val out = FileOutputStream(pictureFile)
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-            } catch (e: IOException ) {
+            } catch (e: IOException) {
                 e.printStackTrace()
             }
 
-             //here goes the intent to go to the picture info form :)
+            //here goes the intent to go to the picture info form :)
             var bundle = Bundle()
-            bundle.putString(IMAGE_PATH, currentPhotoPath)
+            bundle.putString(IMAGE_PATH, currentPath)
             bundle.putInt(PROJECT_ID, projectId)
-            val addPictureDataIntent = Intent(activity,AddPictureData::class.java)
+            val addPictureDataIntent = Intent(activity, AddPictureData::class.java)
             addPictureDataIntent.putExtras(bundle)
             startActivity(addPictureDataIntent)
-        } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+
+        } else if (requestCode == REQUEST_VIDEO_GALLERY && resultCode == RESULT_OK) {
+
             val videoUri: Uri = data?.data!!
-            val videoFile = createVideoFile()
+
+            var videoFile = FileUtil().from(context!!, videoUri)
+
+            val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+            val videoOut: File =
+                File(Environment.getExternalStorageDirectory().path + "/ProjectResourceManager/" + projectName + "/video/VID_$timeStamp" + ".mp4")
+
+            videoFile.copyTo(videoOut)
+
+            var bundle = Bundle()
+            bundle.putString(IMAGE_PATH, videoOut.absolutePath)
+            bundle.putInt(PROJECT_ID, projectId)
+            bundle.putString(VIDEO_URI, videoUri.toString())
+
+            val addVideoDataIntent = Intent(activity, AddVideoData::class.java)
+            addVideoDataIntent.putExtras(bundle)
+            startActivity(addVideoDataIntent)
+            //videoFile.copyTo(File(currentPath))
             //val videoSource = File()
+        } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+
+            val videoUri: Uri = data?.data!!
+
+            var bundle = Bundle()
+            bundle.putString(IMAGE_PATH, currentPath)
+            bundle.putInt(PROJECT_ID, projectId)
+            bundle.putString(VIDEO_URI, videoUri.toString())
+
+            val addVideoDataIntent = Intent(activity, AddVideoData::class.java)
+            addVideoDataIntent.putExtras(bundle)
+            startActivity(addVideoDataIntent)
+
+            //val videoSource = File()
+        } else if (resultCode == RESULT_CANCELED) {
+            println("attempting to delete")
+            try {
+                val deleteFile = File(currentPath)
+                deleteFile.delete()
+            }catch (ex: Exception){
+                context?.toast("Cancelled")
+            }
+            context?.toast("Cancelled")
+
         }
     }
 
