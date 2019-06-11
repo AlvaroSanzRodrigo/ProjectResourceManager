@@ -19,6 +19,9 @@ interface DocumentDao {
     @Query("SELECT * from document WHERE projectId == :projectId")
     fun getByProjectId(projectId : Int): LiveData<List<Document>>
 
+    @Query("SELECT * from document WHERE projectId == :projectId AND id == :documentId")
+    fun getByProjectIdAndDocumentId(projectId : Int, documentId: Int): LiveData<List<Document>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(document: List<Document>): LongArray
 
