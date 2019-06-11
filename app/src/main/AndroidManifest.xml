@@ -26,8 +26,6 @@
         </activity>
         <activity android:name=".activities.AddPictureData">
         </activity>
-        <activity android:name=".activities.AddDocumentData">
-        </activity>
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

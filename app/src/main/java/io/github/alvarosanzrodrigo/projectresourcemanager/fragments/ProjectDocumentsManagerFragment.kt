@@ -24,6 +24,7 @@ import android.widget.Toast
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddPictureData
+import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddTextData
 import io.github.alvarosanzrodrigo.projectresourcemanager.activities.AddVideoData
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
 import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.DocumentDaoRepository
@@ -45,6 +46,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
     companion object {
         const val IMAGE_PATH = "IMAGE_PATH"
+        const val PROJECT_NAME = "PROJECT_NAME"
         const val PROJECT_ID = "PROJECT_ID"
         const val VIDEO_URI = "VIDEO_URI"
         private const val REQUEST_VIDEO_CAPTURE = 3
@@ -172,6 +174,16 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
             startActivityForResult(videoCameraIntent, REQUEST_VIDEO_CAPTURE)
         }
 
+    }
+
+    private fun sendTextActivity() {
+
+        var bundle = Bundle()
+        bundle.putString(PROJECT_NAME, projectName)
+        bundle.putInt(PROJECT_ID, projectId)
+        val addTextDataIntent = Intent(activity, AddTextData::class.java)
+        addTextDataIntent.putExtras(bundle)
+        startActivity(addTextDataIntent)
     }
 
     private fun sendTakePictureIntent() {
@@ -360,6 +372,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         }
         toolbarImageViewText = rootView.findViewById<ImageView>(R.id.toolbar_text).apply {
             this.setOnClickListener {
+                sendTextActivity()
                 morph.hide()
             }
         }
