@@ -15,7 +15,7 @@ import java.io.FileInputStream
 
 class ViewTextData : AppCompatActivity(), SureToDeleteDialogFragment.OnClickedOptionListener {
 
-    override fun onOptionChoosed(optionChoosed: Int) {
+    override fun onOptionChoosedDeleted(optionChoosed: Int) {
         when (optionChoosed) {
             1 -> deleteData()
         }

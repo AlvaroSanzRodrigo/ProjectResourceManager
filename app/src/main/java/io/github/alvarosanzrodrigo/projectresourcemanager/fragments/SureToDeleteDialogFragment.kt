@@ -11,7 +11,7 @@ import io.github.alvarosanzrodrigo.projectresourcemanager.R
 class SureToDeleteDialogFragment : DialogFragment() {
 
     interface OnClickedOptionListener{
-        fun onOptionChoosed(optionChoosed: Int)
+        fun onOptionChoosedDeleted(optionChoosed: Int)
     }
 
     var mCallBack: OnClickedOptionListener? = null
@@ -22,10 +22,10 @@ class SureToDeleteDialogFragment : DialogFragment() {
         builder?.setMessage(getString(R.string.are_you_sure))
             ?.setPositiveButton(getString(R.string.delete), DialogInterface.OnClickListener { dialog, id ->
                 // FIRE ZE MISSILES!
-                mCallBack?.onOptionChoosed(1)
+                mCallBack?.onOptionChoosedDeleted(1)
             })?.setNegativeButton(getString(R.string.cancel), DialogInterface.OnClickListener { dialog, id ->
                 // User cancelled the dialog
-                mCallBack?.onOptionChoosed(2)
+                mCallBack?.onOptionChoosedDeleted(2)
             })
         // Create the AlertDialog object and return it
         return builder!!.create()

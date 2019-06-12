@@ -27,8 +27,10 @@ import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import io.github.alvarosanzrodrigo.projectresourcemanager.activities.*
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterDocument
 import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.DocumentDaoRepository
+import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.ProjectDaoRepository
 import io.github.alvarosanzrodrigo.projectresourcemanager.enums.DocumentTypes
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.CameraOrGalleryDialogFragment
+import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.SureToDeleteDialogFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
 import io.github.alvarosanzrodrigo.projectresourcemanager.utils.FileUtil
 import io.github.alvarosanzrodrigo.projectresourcemanager.viewModels.DocumentViewModel
@@ -43,7 +45,12 @@ import kotlin.collections.ArrayList
 
 
 class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragment.OnClickedOptionListener,
-    AdapterDocument.OnClickedItemListener {
+    AdapterDocument.OnClickedItemListener, SureToDeleteDialogFragment.OnClickedOptionListener {
+    override fun onOptionChoosedDeleted(optionChoosed: Int) {
+        when (optionChoosed) {
+            1 -> deleteProject()
+        }
+    }
 
     companion object {
         const val EDIT = "EDIT"
@@ -412,6 +419,20 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         }
     }
 
+    private fun sendDeleteDialog(){
+        val chooser = SureToDeleteDialogFragment()
+        chooser.mCallBack = this
+        chooser.show(fragmentManager, "chooser")
+    }
+
+    private fun deleteProject(){
+        val fileToDelete = File(Environment.getExternalStorageDirectory().path + "/ProjectResourceManager/" + projectName)
+        fileToDelete.deleteRecursively()
+        activity?.application?.let { DocumentDaoRepository.getInstance(it).deleteByProjectId(projectId) }
+        activity?.application?.let { ProjectDaoRepository.getInstance(it).deleteByProjectId(projectId) }
+        activity?.onBackPressed()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -486,6 +507,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
         toolbarImageViewDeleteProject = rootView.findViewById<ImageView>(R.id.toolbar_delete_project).apply {
             this.setOnClickListener {
+                sendDeleteDialog()
                 morph.hide()
             }
         }
