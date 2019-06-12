@@ -16,6 +16,9 @@ interface DocumentDao {
     @Query("DELETE FROM document ")
     fun deleteAll()
 
+    @Query("DELETE FROM document WHERE projectId == :projectId AND documentId == :documentId")
+    fun deleteByProjectIdAndDocumentI(documentId: Int, projectId: Int)
+
     @Query("SELECT * from document WHERE projectId == :projectId")
     fun getByProjectId(projectId : Int): LiveData<List<Document>>
 
