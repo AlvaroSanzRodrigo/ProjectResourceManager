@@ -48,29 +48,25 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
         //holder.view.findViewById<TextView>(R.id.document_list_model_type).text = items[position].type
 
         when (items[position].type) {
-            DocumentTypes.TEXT -> Picasso.get()
-                .load(R.drawable.ic_text)
-                .fit()
-                .placeholder(R.drawable.ic_image_placeholder)
-                .error(R.drawable.ic_image_error)
-                .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
+            DocumentTypes.TEXT ->
+            {
+                holder.view.findViewById<ImageView>(R.id.document_list_model_image).setImageResource(R.drawable.ic_text_dark)
+            }
             DocumentTypes.PICTURE -> Picasso.get()
                 .load("file://" + items[position].path)
                 .placeholder(R.drawable.ic_image_placeholder)
                 .error(R.drawable.ic_image_error)
                 .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
 
-            DocumentTypes.AUDIO -> Picasso.get()
-                .load(R.drawable.ic_audio)
-                .placeholder(R.drawable.ic_image_placeholder)
-                .error(R.drawable.ic_image_error)
-                .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
+            DocumentTypes.AUDIO ->
+            {
+                holder.view.findViewById<ImageView>(R.id.document_list_model_image).setImageResource(R.drawable.ic_audio_dark)
+            }
 
-            DocumentTypes.VIDEO -> Picasso.get()
-                .load(R.drawable.ic_video)
-                .placeholder(R.drawable.ic_image_placeholder)
-                .error(R.drawable.ic_image_error)
-                .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
+            DocumentTypes.VIDEO ->
+            {
+                holder.view.findViewById<ImageView>(R.id.document_list_model_image).setImageResource(R.drawable.ic_video_dark)
+            }
 
             DocumentTypes.ERROR -> Picasso.get()
                 .load(R.drawable.ic_image_error)
@@ -78,6 +74,7 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
                 .error(R.drawable.ic_image_error)
                 .into(holder.view.findViewById<ImageView>(R.id.document_list_model_image))
         }
+
 
         holder.itemView.setOnClickListener {
             items[position].documentId?.let { mCallBack?.onItemSelected(items[position]) }
