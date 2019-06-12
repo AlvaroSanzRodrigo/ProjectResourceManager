@@ -3,12 +3,14 @@ package io.github.alvarosanzrodrigo.projectresourcemanager.activities
 import android.Manifest
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.Toast
+import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.ProjectDocumentsManagerFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
 import io.github.alvarosanzrodrigo.projectresourcemanager.adapters.AdapterProjects
 import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.NewProjectDialogFragment
@@ -117,13 +119,25 @@ class MainActivity : AppCompatActivity(), AdapterProjects.OnClickedItemListener 
     }
 
     fun changeFragment(projectId: Int, projectName: String) {
+
+        /*
         val bundle = Bundle()
+
         bundle.putString("projectName", projectName)
         bundle.putInt("projectId", projectId)
         val fragment = ProjectManagerFragment()
         fragment.arguments = bundle
+        */
+        val bundle = Bundle()
+        bundle.putString("projectName", projectName)
+        bundle.putInt("projectId", projectId)
+        val documentsFragment: Fragment =
+            ProjectDocumentsManagerFragment()
+        documentsFragment.arguments = bundle
+
+
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragment_container, fragment)
+            replace(R.id.fragment_container, documentsFragment)
             addToBackStack(null)
 
         }.commit()
