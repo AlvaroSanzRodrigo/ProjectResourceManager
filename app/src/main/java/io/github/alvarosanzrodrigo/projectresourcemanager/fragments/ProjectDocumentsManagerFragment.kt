@@ -95,7 +95,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
                 startActivity(viewDataIntent)
             }
             DocumentTypes.TEXT -> {
-                viewDataIntent = Intent(activity, ViewPictureData::class.java).apply {
+                viewDataIntent = Intent(activity, ViewTextData::class.java).apply {
                     putExtras(bundle)
                 }
                 startActivity(viewDataIntent)
