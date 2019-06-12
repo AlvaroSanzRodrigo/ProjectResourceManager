@@ -76,8 +76,6 @@ class AddTextData : AppCompatActivity() {
                     }
                 )
         }
-
-
     }
 
     private fun saveText() {
