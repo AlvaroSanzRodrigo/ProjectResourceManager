@@ -49,4 +49,10 @@ class DocumentDaoRepository internal constructor(application: Application) {
         }
     }
 
+    fun update(document: Document) {
+        doAsync {
+            mDocumentsDao.update(document)
+        }
+    }
+
 }

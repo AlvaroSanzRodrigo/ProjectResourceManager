@@ -46,6 +46,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
     AdapterDocument.OnClickedItemListener {
 
     companion object {
+        const val EDIT = "EDIT"
         const val IMAGE_PATH = "IMAGE_PATH"
         const val AUDIO_PATH = "AUDIO_PATH"
         const val PROJECT_NAME = "PROJECT_NAME"
@@ -84,7 +85,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
         bundle.putString(DOCUMENT_TITLE, document.title)
         bundle.putString(DOCUMENT_PATH, document.path)
         bundle.putInt(PROJECT_ID, projectId)
-        bundle.putInt(DOCUMENT_ID, document.projectId)
+        document.documentId?.let { bundle.putInt(DOCUMENT_ID, it) }
 
         val viewDataIntent: Intent
         when (document.type) {

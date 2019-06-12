@@ -13,7 +13,7 @@ interface ProjectDao {
     fun getAll(): LiveData<List<Project>>
 
 
-    @Query("DELETE FROM document ")
+    @Query("DELETE FROM project")
     fun deleteAll()
 
 

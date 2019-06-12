@@ -23,4 +23,11 @@ class DocumentViewModel : ViewModel() {
         }
         return mDocumentLiveData!!
     }
+
+    fun getByProjectIdAndDocumentId(documentDaoRepository: DocumentDaoRepository, projectId: Int, documentId: Int): LiveData<List<Document>> {
+        if (mDocumentLiveData == null) {
+            mDocumentLiveData = documentDaoRepository.getByProjectIdAndDocumentId(projectId,documentId)
+        }
+        return mDocumentLiveData!!
+    }
 }

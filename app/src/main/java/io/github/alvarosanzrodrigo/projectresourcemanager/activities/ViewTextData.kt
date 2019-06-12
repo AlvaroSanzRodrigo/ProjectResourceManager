@@ -1,5 +1,6 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager.activities
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -53,6 +54,15 @@ class ViewTextData : AppCompatActivity() {
         cancel = findViewById(R.id.cancel_text_view_button)
 
         edit.setOnClickListener {
+            var bundle = Bundle()
+            bundle.putString(ProjectDocumentsManagerFragment.PROJECT_NAME, "")
+            bundle.putInt(ProjectDocumentsManagerFragment.PROJECT_ID, projectId)
+            bundle.putInt(ProjectDocumentsManagerFragment.DOCUMENT_ID, documentId)
+            bundle.putBoolean(ProjectDocumentsManagerFragment.EDIT, true)
+            val addTextDataIntent = Intent(this, AddTextData::class.java)
+            addTextDataIntent.putExtras(bundle)
+            startActivity(addTextDataIntent)
+            this.finish()
         }
         cancel.setOnClickListener {
             this.finish()

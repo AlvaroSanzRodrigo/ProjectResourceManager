@@ -19,7 +19,7 @@ interface DocumentDao {
     @Query("SELECT * from document WHERE projectId == :projectId")
     fun getByProjectId(projectId : Int): LiveData<List<Document>>
 
-    @Query("SELECT * from document WHERE projectId == :projectId AND id == :documentId")
+    @Query("SELECT * from document WHERE projectId == :projectId AND documentId == :documentId")
     fun getByProjectIdAndDocumentId(projectId : Int, documentId: Int): LiveData<List<Document>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
