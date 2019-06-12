@@ -15,7 +15,7 @@ import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.SureToDelete
 import java.io.File
 
 class ViewPictureData : AppCompatActivity(), SureToDeleteDialogFragment.OnClickedOptionListener {
-    override fun onOptionChoosed(optionChoosed: Int) {
+    override fun onOptionChoosedDeleted(optionChoosed: Int) {
         when (optionChoosed) {
             1 -> deleteData()
         }
