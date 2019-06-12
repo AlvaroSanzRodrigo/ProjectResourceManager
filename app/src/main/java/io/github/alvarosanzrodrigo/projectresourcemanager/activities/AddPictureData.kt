@@ -67,8 +67,6 @@ class AddPictureData : AppCompatActivity() {
                     }
                 )
         }
-
-
     }
 
     override fun onBackPressed() {
@@ -152,13 +150,14 @@ class AddPictureData : AppCompatActivity() {
         cancel.setOnClickListener {
 
             if (intent?.extras?.get(ProjectDocumentsManagerFragment.EDIT) == true) {
+                this.finish()
             } else {
                 println("attempting to delete")
                 val deleteFile = File(picturePath)
                 deleteFile.delete()
+                this.finish()
             }
 
-            this.finish()
         }
     }
 }
