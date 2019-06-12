@@ -55,4 +55,10 @@ class DocumentDaoRepository internal constructor(application: Application) {
         }
     }
 
+    fun deleteByDocumentId(documentId: Int, projectId: Int) {
+        doAsync {
+            mDocumentsDao.deleteByProjectIdAndDocumentI(documentId, projectId)
+        }
+    }
+
 }

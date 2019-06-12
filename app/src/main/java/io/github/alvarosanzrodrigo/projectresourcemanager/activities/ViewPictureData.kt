@@ -10,9 +10,16 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import io.github.alvarosanzrodrigo.projectresourcemanager.Fragments.ProjectDocumentsManagerFragment
 import io.github.alvarosanzrodrigo.projectresourcemanager.R
+import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.DocumentDaoRepository
+import io.github.alvarosanzrodrigo.projectresourcemanager.fragments.SureToDeleteDialogFragment
 import java.io.File
 
-class ViewPictureData : AppCompatActivity() {
+class ViewPictureData : AppCompatActivity(), SureToDeleteDialogFragment.OnClickedOptionListener {
+    override fun onOptionChoosed(optionChoosed: Int) {
+        when (optionChoosed) {
+            1 -> deleteData()
+        }
+    }
 
     private var projectId: Int = 0
     private var documentId: Int = 0
@@ -27,6 +34,7 @@ class ViewPictureData : AppCompatActivity() {
     private lateinit var notesView: TextView
     private lateinit var edit: Button
     private lateinit var cancel: Button
+    private lateinit var delete: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +62,7 @@ class ViewPictureData : AppCompatActivity() {
         notesView = findViewById(R.id.view_picture_data_notes)
         edit = findViewById(R.id.edit_image_data_button)
         cancel = findViewById(R.id.cancel_action_image_view_button)
+        delete = findViewById(R.id.delete_image_view_button)
 
         edit.setOnClickListener {
             var bundle = Bundle()
@@ -67,8 +76,13 @@ class ViewPictureData : AppCompatActivity() {
             startActivity(addDataIntent)
             this.finish()
         }
+
         cancel.setOnClickListener {
             this.finish()
+        }
+
+        delete.setOnClickListener {
+            sendDeleteDialog()
         }
     }
 
@@ -83,4 +97,18 @@ class ViewPictureData : AppCompatActivity() {
         descriptionView.text = description
         notesView.text = notes
     }
+
+    private fun sendDeleteDialog(){
+        val chooser = SureToDeleteDialogFragment()
+        chooser.mCallBack = this
+        chooser.show(supportFragmentManager, "chooser")
+    }
+
+    private fun deleteData(){
+        DocumentDaoRepository.getInstance(application).deleteByDocumentId(documentId, projectId)
+        val fileToDelete = File(path)
+        fileToDelete.delete()
+        this.finish()
+    }
+
 }
