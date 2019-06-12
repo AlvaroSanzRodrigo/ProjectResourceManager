@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -25,6 +26,7 @@ class ProjectListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var addProjectFab: FloatingActionButton
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         //loadItems()
@@ -54,6 +56,11 @@ class ProjectListFragment : Fragment() {
         val rootView: View = inflater.inflate(R.layout.fragment_project_list, container, false)
         viewManager = LinearLayoutManager(activity)
         viewAdapter = AdapterProjects(items)
+        addProjectFab = rootView.findViewById(R.id.add_project_fab)
+        addProjectFab.setOnClickListener {
+            val newFragment = NewProjectDialogFragment()
+            newFragment.show(fragmentManager, "Cart")
+        }
         recyclerView = rootView.findViewById<RecyclerView>(R.id.rv_projects).apply {
 
             setHasFixedSize(true)
