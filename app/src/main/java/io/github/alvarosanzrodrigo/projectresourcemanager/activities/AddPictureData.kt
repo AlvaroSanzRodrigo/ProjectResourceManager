@@ -71,9 +71,11 @@ class AddPictureData : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        toast("Picture cancelled")
-        val deleteFile = File(picturePath)
-        deleteFile.delete()
+        if (intent?.extras?.get(ProjectDocumentsManagerFragment.EDIT) != true) {
+            toast("Picture cancelled")
+            val deleteFile = File(picturePath)
+            deleteFile.delete()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

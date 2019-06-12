@@ -13,6 +13,7 @@ import io.github.alvarosanzrodrigo.projectresourcemanager.daoRepositories.Docume
 import io.github.alvarosanzrodrigo.projectresourcemanager.enums.DocumentTypes
 import io.github.alvarosanzrodrigo.projectresourcemanager.models.Document
 import io.github.alvarosanzrodrigo.projectresourcemanager.viewModels.DocumentViewModel
+import org.jetbrains.anko.toast
 import java.io.File
 import java.util.*
 
@@ -30,6 +31,15 @@ class AddAudioData : AppCompatActivity() {
     private lateinit var notes: EditText
     private lateinit var save: Button
     private lateinit var cancel: Button
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (intent?.extras?.get(ProjectDocumentsManagerFragment.EDIT) != true) {
+            toast("Audio cancelled")
+            val deleteFile = File(audioPath)
+            deleteFile.delete()
+        }
+    }
 
     private fun forEdit() {
         if (intent?.extras?.get(ProjectDocumentsManagerFragment.EDIT) == true) {
