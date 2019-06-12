@@ -9,7 +9,7 @@ import java.util.*
 @Entity(
     foreignKeys = [ForeignKey(
     entity = Project::class,
-    parentColumns = arrayOf("id"),
+    parentColumns = arrayOf("projectId"),
     childColumns = arrayOf("projectId")
 )]
 )
@@ -26,5 +26,5 @@ data class Document(
     var type: DocumentTypes
 ){
     @PrimaryKey(autoGenerate = true)
-    var id: Int? = null
+    var documentId: Int? = null
 }

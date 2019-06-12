@@ -11,5 +11,5 @@ data class Project(
     var title: String,
     var date: Date){
     @PrimaryKey(autoGenerate = true)
-    var id: Int? = null
+    var projectId: Int? = null
 }

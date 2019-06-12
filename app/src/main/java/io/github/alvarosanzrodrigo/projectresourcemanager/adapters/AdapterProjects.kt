@@ -50,7 +50,7 @@ class AdapterProjects(var items: ArrayList<Project>) : RecyclerView.Adapter<Adap
         // - replace the contents of the view with that element
 
         holder.itemView.setOnClickListener {
-            items[position].id?.let { mCallBack?.onItemSelected(projectId = it, projectName = items[position].title) }
+            items[position].projectId?.let { mCallBack?.onItemSelected(projectId = it, projectName = items[position].title) }
         }
         holder.view.findViewById<TextView>(R.id.project_list_model_title).text = items[position].title
         holder.view.findViewById<TextView>(R.id.project_list_model_date).text = items[position].date.toString()

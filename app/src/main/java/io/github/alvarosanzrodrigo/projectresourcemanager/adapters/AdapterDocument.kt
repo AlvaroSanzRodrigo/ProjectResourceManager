@@ -80,7 +80,7 @@ class AdapterDocument(var items: ArrayList<Document>) : RecyclerView.Adapter<Ada
         }
 
         holder.itemView.setOnClickListener {
-            items[position].id?.let { mCallBack?.onItemSelected(items[position]) }
+            items[position].documentId?.let { mCallBack?.onItemSelected(items[position]) }
         }
 
         holder.view.findViewById<TextView>(R.id.document_list_model_type).text = items[position].title

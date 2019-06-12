@@ -15,7 +15,7 @@ import org.jetbrains.anko.doAsync
 
 @Database(
     entities = [Project::class, Document::class],
-    version = 6
+    version = 7
 )
 
 @TypeConverters(DataConverter::class, ListConverter::class, DocumentTypeConverter::class)
