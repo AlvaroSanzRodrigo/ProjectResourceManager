@@ -129,6 +129,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
     private lateinit var toolbarImageViewAudio: ImageView
     private lateinit var toolbarImageViewVideo: ImageView
     private lateinit var toolbarImageViewPhoto: ImageView
+    private lateinit var toolbarImageViewDeleteProject: ImageView
     private lateinit var pictureFilePath: String
 
     private var projectId: Int = 0
@@ -479,6 +480,12 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
                 val chooser = CameraOrGalleryDialogFragment()
                 chooser.mCallBack = this@ProjectDocumentsManagerFragment
                 chooser.show(fragmentManager, "chooser")
+                morph.hide()
+            }
+        }
+
+        toolbarImageViewDeleteProject = rootView.findViewById<ImageView>(R.id.toolbar_delete_project).apply {
+            this.setOnClickListener {
                 morph.hide()
             }
         }
