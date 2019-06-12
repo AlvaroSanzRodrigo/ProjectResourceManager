@@ -101,7 +101,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
                 startActivity(viewDataIntent)
             }
             DocumentTypes.VIDEO -> {
-                viewDataIntent = Intent(activity, ViewPictureData::class.java).apply {
+                viewDataIntent = Intent(activity, ViewVideoData::class.java).apply {
                     putExtras(bundle)
                 }
                 startActivity(viewDataIntent)
