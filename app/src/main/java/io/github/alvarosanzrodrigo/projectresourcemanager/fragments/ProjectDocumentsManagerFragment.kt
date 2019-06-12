@@ -107,7 +107,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
                 startActivity(viewDataIntent)
             }
             DocumentTypes.AUDIO -> {
-                viewDataIntent = Intent(activity, ViewPictureData::class.java).apply {
+                viewDataIntent = Intent(activity, ViewAudioData::class.java).apply {
                     putExtras(bundle)
                 }
                 startActivity(viewDataIntent)
@@ -428,7 +428,7 @@ class ProjectDocumentsManagerFragment : Fragment(), CameraOrGalleryDialogFragmen
 
             ViewModelProviders.of(this)
                 .get(DocumentViewModel::class.java)
-                .getAll(it).observe(
+                .getByProjectId(it, projectId).observe(
                     this,
                     Observer { list ->
                         if (list != null) {
