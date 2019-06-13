@@ -15,10 +15,11 @@ import org.jetbrains.anko.doAsync
 
 @Database(
     entities = [Project::class, Document::class],
-    version = 1
+    version = 7
 )
 
-@TypeConverters(DataConverter::class)
+@TypeConverters(DataConverter::class, ListConverter::class, DocumentTypeConverter::class)
+
 
 abstract class AppDatabase : RoomDatabase() {
 

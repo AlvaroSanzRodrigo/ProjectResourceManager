@@ -1,23 +1,30 @@
 package io.github.alvarosanzrodrigo.projectresourcemanager.models
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
+import io.github.alvarosanzrodrigo.projectresourcemanager.database.DocumentTypeConverter
+import io.github.alvarosanzrodrigo.projectresourcemanager.database.ListConverter
+import io.github.alvarosanzrodrigo.projectresourcemanager.enums.DocumentTypes
 import java.util.*
 
 @Entity(
     foreignKeys = [ForeignKey(
     entity = Project::class,
-    parentColumns = arrayOf("id"),
+    parentColumns = arrayOf("projectId"),
     childColumns = arrayOf("projectId")
 )]
 )
-class Document(
+data class Document(
     var projectId: Int,
-    //var image: Drawable,
+    var title: String,
+    var path: String,
+    var notes: String,
+    @TypeConverters(ListConverter::class)
+    var tags:List<String>,
+    var description: String,
     var date: Date,
-    var type: String
+    @TypeConverters(DocumentTypeConverter::class)
+    var type: DocumentTypes
 ){
     @PrimaryKey(autoGenerate = true)
-    var id: Int? = null
+    var documentId: Int? = null
 }

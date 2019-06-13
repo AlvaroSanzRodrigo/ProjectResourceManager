@@ -6,10 +6,33 @@
              tools:context=".fragments.ProjectListFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_projects"
+
+
+    <RelativeLayout
+            android:id="@+id/fabtoolbar_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/project_list_model"/>
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true">
+
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_projects"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/project_list_model"/>
+
+        <android.support.design.widget.FloatingActionButton
+                android:id="@+id/add_project_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_new_project"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="30dp"
+                android:layout_marginRight="30dp"/>
+
+
+    </RelativeLayout>
+
 
 </FrameLayout>

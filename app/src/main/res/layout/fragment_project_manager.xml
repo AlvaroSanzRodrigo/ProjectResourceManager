@@ -20,7 +20,7 @@
             android:id="@+id/rv_documents"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/recycler_view_item_1"/>
+            />
 
 
 
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fabSize="normal"
-                android:src="@drawable/ic_add"/>
+                android:src="@drawable/ic_menu"/>
 
     </RelativeLayout>
 
@@ -53,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_image"/>
+                android:src="@drawable/ic_picture"/>
         <ImageView
                 android:id="@+id/toolbar_video"
                 android:layout_width="0dp"
@@ -75,6 +75,13 @@
                 android:layout_weight="1"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_audio"/>
+        <ImageView
+                android:id="@+id/toolbar_delete_project"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_delete"/>
         </LinearLayout>
 
 </com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout>

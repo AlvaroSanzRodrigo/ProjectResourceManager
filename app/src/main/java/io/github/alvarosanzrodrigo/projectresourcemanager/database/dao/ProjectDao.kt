@@ -13,8 +13,11 @@ interface ProjectDao {
     fun getAll(): LiveData<List<Project>>
 
 
-    @Query("DELETE FROM document ")
+    @Query("DELETE FROM project")
     fun deleteAll()
+
+    @Query("DELETE FROM project WHERE projectId == :projectId")
+    fun deleteByProjectId(projectId: Int)
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

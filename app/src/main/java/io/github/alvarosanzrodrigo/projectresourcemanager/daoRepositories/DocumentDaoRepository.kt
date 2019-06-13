@@ -34,10 +34,36 @@ class DocumentDaoRepository internal constructor(application: Application) {
         return mDocument
     }
 
+    fun getByProjectId(projectId : Int): LiveData<List<Document>> {
+        return mDocumentsDao.getByProjectId(projectId)
+    }
+
+    fun getByProjectIdAndDocumentId(projectId : Int, documentId: Int): LiveData<List<Document>> {
+        return mDocumentsDao.getByProjectIdAndDocumentId(projectId, documentId)
+    }
+
     fun insertAll(documents: List<Document>) {
 
         doAsync {
             mDocumentsDao.insert(documents)
+        }
+    }
+
+    fun update(document: Document) {
+        doAsync {
+            mDocumentsDao.update(document)
+        }
+    }
+
+    fun deleteByDocumentId(documentId: Int, projectId: Int) {
+        doAsync {
+            mDocumentsDao.deleteByProjectIdAndDocumentI(documentId, projectId)
+        }
+    }
+
+    fun deleteByProjectId(projectId: Int) {
+        doAsync {
+            mDocumentsDao.deleteByProjectId(projectId)
         }
     }
 

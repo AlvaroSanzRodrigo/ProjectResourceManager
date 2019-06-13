@@ -16,6 +16,17 @@ interface DocumentDao {
     @Query("DELETE FROM document ")
     fun deleteAll()
 
+    @Query("DELETE FROM document WHERE projectId == :projectId AND documentId == :documentId")
+    fun deleteByProjectIdAndDocumentI(documentId: Int, projectId: Int)
+
+    @Query("DELETE FROM document WHERE projectId == :projectId")
+    fun deleteByProjectId(projectId: Int)
+
+    @Query("SELECT * from document WHERE projectId == :projectId")
+    fun getByProjectId(projectId : Int): LiveData<List<Document>>
+
+    @Query("SELECT * from document WHERE projectId == :projectId AND documentId == :documentId")
+    fun getByProjectIdAndDocumentId(projectId : Int, documentId: Int): LiveData<List<Document>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(document: List<Document>): LongArray

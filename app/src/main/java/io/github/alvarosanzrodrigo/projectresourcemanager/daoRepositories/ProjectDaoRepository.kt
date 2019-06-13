@@ -40,4 +40,11 @@ class ProjectDaoRepository internal constructor(application: Application) {
         }
     }
 
+    fun deleteByProjectId(projectId: Int) {
+
+        doAsync {
+            mProjectDao.deleteByProjectId(projectId)
+        }
+    }
+
 }

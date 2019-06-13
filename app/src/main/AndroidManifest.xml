@@ -3,6 +3,16 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="io.github.alvarosanzrodrigo.projectresourcemanager">
 
+    <uses-feature
+            android:name="android.hardware.camera"
+            android:required="true"/>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -11,13 +21,30 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.ViewVideoData">
+        </activity>
+        <activity android:name=".activities.ViewTextData">
+        </activity>
+        <activity android:name=".activities.ViewAudioData">
+        </activity>
+        <activity android:name=".activities.ViewPictureData">
+        </activity>
+        <activity android:name=".activities.AddAudioData">
+        </activity>
+        <activity android:name=".activities.AddTextData">
+        </activity>
+        <activity android:name=".activities.AddVideoData">
+        </activity>
+        <activity android:name=".activities.AddPictureData">
+        </activity>
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <provider
                 android:name="android.support.v4.content.FileProvider"
                 android:authorities="io.github.alvarosanzrodrigo.projectresourcemanager"
@@ -28,13 +55,5 @@
                     android:resource="@xml/file_list"/>
         </provider>
     </application>
-
-    <uses-feature android:name="android.hardware.camera"
-                  android:required="false" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-
 
 </manifest>
